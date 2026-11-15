@@ -1,0 +1,1426 @@
+@import 'tailwindcss';
+
+/* ================================================================
+   DHANAK 2026  "EMBER FROM ASHES" Design System
+   Cultural Festival of IIST Thiruvananthapuram
+   ================================================================ */
+
+:root {
+  /* Core Backgrounds (Obsidian & Ash) */
+  --background: #0C0A09;
+  --foreground: #F5F0EB;
+
+  --void:    #0C0A09;
+  --ash:     #161210;
+  --ash-mid: #221A14;
+  --surface: #1E1510;
+  --horizon: #3D2E24;
+
+  /* Ember Fire Palette */
+  --ember:       #FF4500;
+  --ember-hot:   #FF6B00;
+  --ember-pale:  #FF8C00;
+  --gold:        #FFB800;
+  --gold-bright: #FFD700;
+  --gold-dim:    rgba(255,184,0,0.15);
+  --crimson:     #DC143C;
+  --ember-dim:   rgba(255,69,0,0.15);
+  --ember-faint: rgba(255,69,0,0.06);
+
+  /* Text */
+  --ghost:      #FFFFFF;
+  --muted:      rgba(255,255,255,0.96);
+  --muted-dim:  rgba(255,255,255,0.85);
+
+  /* Borders */
+  --border-soft:  rgba(255,100,0,0.12);
+  --border-faint: rgba(255,100,0,0.06);
+  --border-ember: rgba(255,69,0,0.35);
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+  --space-xl: 3.5rem;
+  --space-2xl: 6rem;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  /* Gradients */
+  --gradient-ember:         linear-gradient(135deg, var(--ember) 0%, var(--gold) 100%);
+  --gradient-ember-crimson: linear-gradient(135deg, var(--crimson) 0%, var(--ember) 60%, var(--gold) 100%);
+  --gradient-surface:       linear-gradient(180deg, rgba(255,100,0,0.04) 0%, rgba(255,100,0,0.01) 100%);
+
+  /* Legacy aliases so existing pages that reference --cyan/--purple still compile */
+  --cyan:          var(--ember);
+  --cyan-bright:   var(--ember-hot);
+  --cyan-dim:      var(--ember-dim);
+  --cyan-faint:    var(--ember-faint);
+  --purple:        var(--crimson);
+  --purple-bright: #E0526A;
+  --purple-dim:    rgba(220,20,60,0.15);
+  --space:         var(--ash);
+  --space-2:       #0E0C0A;
+
+  /* Dhanak gradient aliases */
+  --gradient-gold-cyan:    var(--gradient-ember);
+  --gradient-cyan-purple:  var(--gradient-ember-crimson);
+}
+
+:root {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-void:    var(--void);
+  --color-surface: var(--surface);
+  --color-ember:   var(--ember);
+  --color-gold:    var(--gold);
+  --color-crimson: var(--crimson);
+  --color-ghost:   var(--ghost);
+  --color-horizon: var(--horizon);
+  --color-cyan:    var(--ember);
+  --color-purple:  var(--crimson);
+}
+
+::selection,
+*::selection {
+  background: rgba(255, 115, 0, 0.45);
+  color: #FFE033;
+  -webkit-text-fill-color: #FFE033;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.85), 0 0 22px rgba(255, 69, 0, 0.65);
+}
+
+::-moz-selection,
+*::-moz-selection {
+  background: rgba(255, 115, 0, 0.45);
+  color: #FFE033;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.85), 0 0 22px rgba(255, 69, 0, 0.65);
+}
+/* overflow-y is set explicitly alongside overflow-x on both html and body
+
+   below â per spec, setting only overflow-x to something other than
+
+   visible silently promotes the other axis's visible to auto, so without
+
+   this both html AND body become independent scroll containers with their
+
+   own scrollbars. That's the "scrollbar inside a scrollbar" bug: scrolling
+
+   over content scrolls whichever one the cursor happens to be over, and it
+
+   can get stuck against the wrong one's scroll limit. */
+
+html {
+
+    scroll-behavior: smooth;
+
+    overflow-x: hidden;
+
+    overflow-x: clip;
+
+    overflow-y: visible;
+
+    max-width: 100vw;
+
+}
+
+
+
+body {
+
+  background: var(--void);
+
+  color: var(--ghost);
+
+  font-family: var(--font-body), sans-serif;
+
+  overflow-x: hidden;
+
+  overflow-x: clip;
+
+  overflow-y: visible;
+
+  max-width: 100vw;
+
+}
+
+
+
+/* ââ Desktop-only hover decoration âââââââââââââââââââââââââââââ
+
+   Hidden purely via CSS (not JS/SSR device checks) so the server and
+
+   client always render identical markup â no hydration mismatch, and
+
+   no flash of oversized decorative elements before JS takes over. */
+
+@media (hover: none), (pointer: coarse) {
+
+  .hover-fx {
+
+    display: none !important;
+
+  }
+
+  .hover-anim {
+
+    animation: none !important;
+
+  }
+
+}
+
+/* ── Mobile (Android + iOS) baseline ───────────────────────────── */
+
+html {
+  /* Stop iOS Safari / Android Chrome from inflating text on rotate. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* Remove the grey/blue flash Android & iOS paint on every tap. */
+  -webkit-tap-highlight-color: transparent;
+  /* Respect iPhone home-indicator area at the very bottom of the page. */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Keep fixed UI clear of the notch / Dynamic Island and home indicator. */
+@media (max-width: 639px) {
+  .safe-top { top: max(0.5rem, env(safe-area-inset-top)) !important; }
+}
+.safe-bottom { bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.75rem)) !important; }
+
+@media (hover: none), (pointer: coarse) {
+  /* iOS Safari auto-zooms into any field under 16px on focus and never
+     zooms back out — forcing 16px on touch devices prevents that. */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Comfortable minimum tap targets (Apple HIG / Material: ~44px). */
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Touch devices cannot hover — keep card descriptions readable without hover. */
+  .touch-reveal {
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+  }
+
+  /* Skip continuous animated SVG noise / heavy composited overlays on mobile GPUs. */
+  .digital-interference::after,
+  .realm-backdrop::after {
+    display: none !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Heavy backdrop blur is the #1 cause of scroll jank on mid-range
+     Android & iOS phones — keep the frosted look at a GPU-friendly radius. */
+  .glass-card,
+  .lava-box,
+  .backdrop-blur-md,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl {
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .digital-interference::after,
+  .realm-backdrop::after {
+    display: none !important;
+    animation: none !important;
+  }
+}
+
+
+
+/* ââ Font utilities âââââââââââââââââââââââââââââââââââââââââââ */
+
+.font-display {
+
+  font-family: var(--font-display), sans-serif;
+
+}
+
+
+
+.font-body {
+
+  font-family: var(--font-body), sans-serif;
+
+}
+
+
+
+.font-mono {
+
+  font-family: var(--font-mono), monospace;
+
+}
+
+
+
+/* ââ Digital Static Interference ââââââââââââââââââââââââââââââ */
+
+
+
+/* Main interference container */
+
+.digital-interference {
+
+  position: relative;
+
+  display: inline-block;
+
+}
+
+
+
+/* Scanlines moving across text */
+
+.digital-interference::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: -4px -8px;
+
+  background: repeating-linear-gradient(
+
+    0deg,
+
+    transparent 0px,
+
+    transparent 2px,
+
+    rgba(255, 255, 255, 0.03) 2px,
+
+    rgba(255, 255, 255, 0.03) 4px
+
+  );
+
+  background-size: 100% 4px;
+
+  animation: scanlineMove 8s linear infinite;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+}
+
+
+
+/* Static noise overlay */
+
+.digital-interference::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: -4px -8px;
+
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+
+  background-size: 128px 128px;
+
+  animation: noiseShift 0.5s steps(8) infinite;
+
+  pointer-events: none;
+
+  z-index: 2;
+
+  mix-blend-mode: overlay;
+
+}
+
+
+
+/* Glitch displacement on text */
+
+.digital-interference .glitch-text {
+
+  position: relative;
+
+  display: inline-block;
+
+  animation: glitchDisplace 6s ease-in-out infinite;
+
+}
+
+
+
+/* RGB split / chromatic aberration */
+
+.digital-interference .glitch-text::before,
+
+.digital-interference .glitch-text::after {
+
+  content: attr(data-text);
+
+  position: absolute;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  pointer-events: none;
+
+}
+
+
+
+.digital-interference .glitch-text::before {
+
+  color: rgba(255, 107, 0, 0.5);
+
+  animation: rgbSplitR 4s ease-in-out infinite;
+
+  mix-blend-mode: screen;
+
+}
+
+
+
+.digital-interference .glitch-text::after {
+
+  color: rgba(255, 100, 100, 0.4);
+
+  animation: rgbSplitB 4s ease-in-out infinite;
+
+  mix-blend-mode: screen;
+
+}
+
+
+
+/* Scanline sweep - a single bright line scanning down */
+
+.scanline-sweep {
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+
+.scanline-sweep::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  right: 0;
+
+  height: 2px;
+
+  background: linear-gradient(
+
+    90deg,
+
+    transparent 0%,
+
+    rgba(255, 255, 255, 0.15) 20%,
+
+    rgba(255, 255, 255, 0.25) 50%,
+
+    rgba(255, 255, 255, 0.15) 80%,
+
+    transparent 100%
+
+  );
+
+  animation: sweepDown 4s linear infinite;
+
+  pointer-events: none;
+
+  z-index: 3;
+
+}
+
+
+
+/* Periodic flicker effect */
+
+.digital-flicker {
+
+  animation: digitalFlicker 8s step-end infinite;
+
+}
+
+
+
+/* ââ Keyframes ââââââââââââââââââââââââââââââââââââââââââââââââ */
+
+
+
+@keyframes scanlineMove {
+
+  0% { transform: translateY(0); }
+
+  100% { transform: translateY(4px); }
+
+}
+
+
+
+@keyframes noiseShift {
+
+  0% { background-position: 0 0; }
+
+  12.5% { background-position: -16px 8px; }
+
+  25% { background-position: 32px -16px; }
+
+  37.5% { background-position: -8px 24px; }
+
+  50% { background-position: 16px -32px; }
+
+  62.5% { background-position: -24px 0px; }
+
+  75% { background-position: 8px 16px; }
+
+  87.5% { background-position: -32px -8px; }
+
+  100% { background-position: 0 0; }
+
+}
+
+
+
+@keyframes glitchDisplace {
+
+  0%, 100% { transform: translate(0, 0); }
+
+  2% { transform: translate(-2px, 0); }
+
+  4% { transform: translate(2px, 0); }
+
+  6% { transform: translate(0, 0); }
+
+  42% { transform: translate(0, 0); }
+
+  44% { transform: translate(1px, -1px); }
+
+  46% { transform: translate(-1px, 1px); }
+
+  48% { transform: translate(0, 0); }
+
+  78% { transform: translate(0, 0); }
+
+  80% { transform: translate(-3px, 0); }
+
+  82% { transform: translate(0, 0); }
+
+}
+
+
+
+@keyframes rgbSplitR {
+
+  0%, 100% { transform: translate(0, 0); opacity: 0; }
+
+  2% { transform: translate(-3px, 1px); opacity: 0.6; }
+
+  4% { transform: translate(0, 0); opacity: 0; }
+
+  44% { transform: translate(0, 0); opacity: 0; }
+
+  46% { transform: translate(2px, -1px); opacity: 0.5; }
+
+  48% { transform: translate(0, 0); opacity: 0; }
+
+  80% { transform: translate(0, 0); opacity: 0; }
+
+  82% { transform: translate(-2px, 0); opacity: 0.4; }
+
+  84% { transform: translate(0, 0); opacity: 0; }
+
+}
+
+
+
+@keyframes rgbSplitB {
+
+  0%, 100% { transform: translate(0, 0); opacity: 0; }
+
+  2% { transform: translate(3px, -1px); opacity: 0.5; }
+
+  4% { transform: translate(0, 0); opacity: 0; }
+
+  44% { transform: translate(0, 0); opacity: 0; }
+
+  46% { transform: translate(-2px, 1px); opacity: 0.4; }
+
+  48% { transform: translate(0, 0); opacity: 0; }
+
+  80% { transform: translate(0, 0); opacity: 0; }
+
+  82% { transform: translate(2px, 0); opacity: 0.3; }
+
+  84% { transform: translate(0, 0); opacity: 0; }
+
+}
+
+
+
+@keyframes sweepDown {
+
+  0% { top: -2px; }
+
+  100% { top: calc(100% + 2px); }
+
+}
+
+
+
+@keyframes digitalFlicker {
+
+  0%, 100% { opacity: 1; }
+
+  3% { opacity: 0.85; }
+
+  6% { opacity: 1; }
+
+  45% { opacity: 1; }
+
+  47% { opacity: 0.9; }
+
+  49% { opacity: 1; }
+
+  82% { opacity: 1; }
+
+  84% { opacity: 0.88; }
+
+  86% { opacity: 1; }
+
+}
+
+
+
+/* ââ Glowing text âââââââââââââââââââââââââââââââââââââââââââââ */
+
+.text-glow {
+
+  text-shadow:
+
+    0 0 10px currentColor,
+
+    0 0 30px currentColor,
+
+    0 0 60px currentColor;
+
+}
+
+
+
+.text-glow-subtle {
+
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.06);
+
+}
+
+
+
+/* ââ Cinematic text reveal ââââââââââââââââââââââââââââââââââââ */
+
+@keyframes textReveal {
+
+  0% {
+
+    opacity: 0;
+
+    transform: translateY(12px);
+
+    filter: blur(6px);
+
+  }
+
+  100% {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+    filter: blur(0);
+
+  }
+
+}
+
+
+
+.animate-text-reveal {
+
+  animation: textReveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+
+}
+
+
+
+/* ââ Existing animations ââââââââââââââââââââââââââââââââââââââ */
+
+@keyframes sparkleFloat {
+
+  0%, 100% {
+
+    opacity: 0;
+
+    transform: translateY(0) scale(0.5);
+
+  }
+
+  25% {
+
+    opacity: 0.8;
+
+    transform: translateY(-10px) scale(1.2);
+
+  }
+
+  50% {
+
+    opacity: 0.4;
+
+    transform: translateY(-20px) scale(0.8);
+
+  }
+
+  75% {
+
+    opacity: 0.9;
+
+    transform: translateY(-8px) scale(1);
+
+  }
+
+}
+
+
+
+/* ââ Workshop Wheel ââââââââââââââââââââââââââââââââââââââââââ */
+
+@keyframes wheelGlowPulse {
+
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+
+  50% { opacity: 0.9; transform: scale(1.03); }
+
+}
+
+
+
+@keyframes thumbnailActive {
+
+  0% { box-shadow: 0 0 0px rgba(255,255,255,0); }
+
+  100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+
+}
+
+
+
+/* ââ Shared intro animations ââââââââââââââââââââââââââââ */
+
+@keyframes gridShift {
+
+  0% { background-position: 0 0; }
+
+  100% { background-position: 60px 60px; }
+
+}
+
+
+
+@keyframes scanMove {
+
+  0% { top: -2px; }
+
+  100% { top: 100%; }
+
+}
+
+
+
+@keyframes dotPulse {
+
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+  50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+
+}
+
+
+
+@keyframes bracketFadeIn {
+
+  0% { opacity: 0; transform: scale(0.5); }
+
+  100% { opacity: 0.4; transform: scale(1); }
+
+}
+
+
+
+/* ââ Shared category box animations âââââââââââââââââââââ */
+
+@keyframes pulseGlow {
+
+  0% { opacity: 0.5; }
+
+  100% { opacity: 1; }
+
+}
+
+
+
+/* ââ Shared gallery animations ââââââââââââââââââââââââââ */
+
+@keyframes bracketFade {
+
+  0% { opacity: 0; transform: scale(0.5); }
+
+  100% { opacity: 0.5; transform: scale(1); }
+
+}
+
+
+
+@keyframes scanLine {
+
+  0% { top: -2px; }
+
+  100% { top: 100%; }
+
+}
+
+
+
+/* `will-change: scroll-position` on html used to live here as a
+
+   "performance hint" â actually a known anti-pattern: it forces the whole
+
+   document onto its own compositing layer, which on pages stacking many
+
+   other will-change/transform/fixed-position layers (like the event/
+
+   workshop detail pages) can make scroll happen on a layer that desyncs
+
+   from what's painted, until another input event forces a repaint â
+
+   exactly the "second scrollbar, stuck until I move the mouse" symptom.
+
+   Removed. */
+
+
+
+/* ââ Shared design-system components ââââââââââââââââââââââââââ
+
+   Reusable primitives so pages read as one visual system instead
+
+   of ad-hoc Tailwind arbitrary values. Purely additive utility
+
+   classes â safe to layer with existing Tailwind classes. */
+
+
+
+.glass-card,
+.lava-box {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 69, 0, 0.3);
+  background: linear-gradient(165deg, rgba(28, 13, 8, 0.94) 0%, rgba(14, 10, 9, 0.97) 100%);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 140, 0, 0.16);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.glass-card:hover,
+.lava-box:hover {
+  border-color: rgba(255, 107, 0, 0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(255, 69, 0, 0.25), inset 0 1px 0 rgba(255, 184, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ── Mood Indigo-style Dhanak Molten Lava 3D Poster Card ──────────────────── */
+.lava-3d-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.lava-poster-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  max-width: 275px;
+  border-radius: 18px;
+  border: 2.5px solid rgba(255, 107, 0, 0.78);
+  background: #120603;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 69, 0, 0.25), inset 0 0 15px rgba(255, 69, 0, 0.15);
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.18s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+  contain: paint layout;
+}
+
+.lava-poster-card:hover {
+  border-color: #FFAA00;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.85), 0 0 36px rgba(255, 140, 0, 0.55), inset 0 0 25px rgba(255, 100, 0, 0.3);
+}
+
+.lava-poster-card:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+.lava-poster-title {
+  position: relative;
+  z-index: 10;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.8);
+  transition: color 0.22s ease, text-shadow 0.22s ease;
+}
+
+@media (min-width: 640px) {
+  .lava-poster-title {
+    font-size: 1.15rem;
+  }
+}
+
+.lava-poster-card:hover .lava-poster-title {
+  color: #FFC043;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 1), 0 0 20px rgba(255, 140, 0, 0.6);
+}
+
+/* ── Dhanak Molten Lava Workshop Tile (Professional Obsidian & Ember) ─── */
+.lava-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.35rem;
+  min-height: 86px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #160D09 0%, #0E0705 60%, #130A07 100%);
+  border: 1px solid rgba(255, 115, 30, 0.28);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 140, 40, 0.08);
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+  contain: paint layout;
+}
+
+.lava-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 120%, rgba(255, 80, 0, 0.16) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.lava-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 150, 40, 0.65);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 100, 0, 0.16), inset 0 1px 0 rgba(255, 180, 50, 0.2);
+}
+
+.lava-tile:hover::before {
+  opacity: 1;
+}
+
+.lava-tile:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.lava-vein {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 80, 0, 0.3) 25%, rgba(255, 160, 20, 0.75) 50%, rgba(255, 80, 0, 0.3) 75%, transparent 100%);
+  opacity: 0.7;
+  transition: opacity 0.3s ease, height 0.3s ease;
+  pointer-events: none;
+}
+
+.lava-tile:hover .lava-vein {
+  opacity: 1;
+  height: 2.5px;
+  box-shadow: 0 0 8px rgba(255, 160, 20, 0.7);
+}
+
+.lava-tile-title {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #F8F5F0;
+  transition: color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .lava-tile {
+    min-height: 90px;
+    padding: 1.25rem 1.5rem;
+  }
+  .lava-tile-title {
+    font-size: 1.02rem;
+  }
+}
+
+.lava-tile:hover .lava-tile-title {
+  color: #FFB347;
+}
+
+.lava-tile-arrow {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 90, 20, 0.08);
+  border: 1px solid rgba(255, 120, 30, 0.25);
+  color: #FFA040;
+  transition: all 0.22s ease;
+}
+
+.lava-tile:hover .lava-tile-arrow {
+  background: linear-gradient(135deg, #FF5500, #FFAA00);
+  border-color: #FFAA00;
+  color: #0E0704;
+  transform: translateX(3px);
+  box-shadow: 0 0 12px rgba(255, 110, 0, 0.5);
+}
+
+/* ── Professional Dhanak Masterclass Detail Page Components ─────────────── */
+.pro-card {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(22, 14, 10, 0.92) 0%, rgba(12, 8, 6, 0.96) 100%);
+  border: 1px solid rgba(255, 115, 30, 0.2);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 1.75rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pro-card:hover {
+  border-color: rgba(255, 130, 30, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 80, 0, 0.06);
+}
+
+.pro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 115, 30, 0.3);
+  background: rgba(255, 80, 0, 0.08);
+  color: #FFA040;
+}
+
+
+
+.btn-primary {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  padding: 0.85rem 1.75rem;
+
+  border-radius: 999px;
+
+  font-family: var(--font-mono), monospace;
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: var(--void);
+
+  background: var(--gradient-gold-cyan);
+
+  background-size: 160% 160%;
+
+  background-position: 0% 50%;
+
+  box-shadow: 0 8px 30px rgba(255,100,0,0.18);
+
+  transition: background-position 0.5s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+}
+
+
+
+.btn-primary:hover {
+
+  background-position: 100% 50%;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 12px 40px rgba(255, 100, 0, 0.28);
+
+}
+
+
+
+.btn-secondary {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  padding: 0.8rem 1.65rem;
+
+  border-radius: 999px;
+
+  font-family: var(--font-mono), monospace;
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+
+  color: var(--ghost);
+
+  border: 1px solid var(--border-soft);
+
+  background: rgba(255,255,255,0.03);
+
+  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+
+}
+
+
+
+.btn-secondary:hover {
+
+  border-color: rgba(255,100,0,0.45);
+
+  background: rgba(255,100,0,0.06);
+
+  color: var(--ember-hot);
+
+}
+
+
+
+.section-heading {
+
+  font-family: var(--font-display), sans-serif;
+
+  text-transform: uppercase;
+
+  letter-spacing: -0.01em;
+
+  line-height: 1.05;
+
+  background: linear-gradient(180deg, #ffffff 0%, #fff3e0 100%);
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  color: transparent;
+
+  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.95));
+
+}
+
+
+
+.section-eyebrow {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.6rem;
+
+  font-family: var(--font-mono), monospace;
+
+  font-size: 0.68rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.35em;
+
+  text-transform: uppercase;
+
+  color: var(--ember);
+
+}
+
+
+
+.section-eyebrow::before {
+
+  content: "";
+
+  width: 1.75rem;
+
+  height: 1px;
+
+  background: linear-gradient(90deg, var(--ember), transparent);
+
+}
+
+
+
+.font-badcoma {
+
+  font-family: 'Bad Coma', 'Orbitron', sans-serif;
+
+}
+
+
+
+.prize-pool-banner {
+
+  background: rgba(255,193,7,0.08);
+
+  border: 1px solid rgba(255,193,7,0.4);
+
+  backdrop-filter: blur(8px);
+
+  animation: prizePoolBannerPulse 2.2s ease-in-out infinite;
+
+}
+
+
+
+@keyframes prizePoolBannerPulse {
+
+  0%, 100% { box-shadow: 0 0 20px rgba(255,193,7,0.2); }
+
+  50% { box-shadow: 0 0 34px rgba(255,193,7,0.4); }
+
+}
+
+
+
+.chip {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  border-radius: 999px;
+
+  border: 1px solid var(--border-soft);
+
+  background: rgba(255,255,255,0.03);
+
+  padding: 0.3rem 0.8rem;
+
+  font-family: var(--font-mono), monospace;
+
+  font-size: 0.65rem;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: var(--muted);
+
+}
+
+
+/* ── DHANAK HERITAGE STYLES (from dhanakiist.co.in) ── */
+.font-cinzel {
+  font-family: var(--font-cinzel-decorative), var(--font-cinzel), 'Cinzel Decorative', 'Cinzel', serif;
+}
+
+.font-google-sans {
+  font-family: 'Google Sans', var(--font-body), sans-serif;
+}
+
+.brand-text {
+  background-image: linear-gradient(180deg, #FFE4CE 0%, #FFC9A3 54%, #F29B6B 100%);
+  color: transparent;
+  background-position: 50%;
+  background-size: 115% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--font-cinzel-decorative), 'Cinzel Decorative', 'Cinzel', serif;
+  display: inline-block;
+  position: relative;
+  letter-spacing: 0.1em;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95));
+}
+
+.brand-tagline-cinzel {
+  font-family: var(--font-cinzel), 'Cinzel', serif;
+  font-variant-caps: small-caps;
+  color: #FFCA9E;
+  text-shadow: 0 0 12px rgba(255, 110, 40, 0.55), 0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+.brand-text-gold {
+  background-image: linear-gradient(135deg, #FFF6E5 0%, #FFD700 35%, #FF8C00 70%, #E01B24 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--font-cinzel-decorative), 'Cinzel Decorative', 'Cinzel', serif;
+  display: inline-block;
+  position: relative;
+  letter-spacing: 0.1em;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95));
+}
+
+.realm-backdrop {
+  background: var(--background);
+  position: relative;
+}
+
+.realm-backdrop::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(1200px 800px at 50% 20%, rgba(224, 27, 36, 0.09), transparent 70%),
+    radial-gradient(900px 500px at 15% 40%, rgba(255, 140, 0, 0.06), transparent 70%),
+    radial-gradient(1000px 600px at 85% 80%, rgba(184, 22, 29, 0.08), transparent 70%);
+}
+
+.realm-backdrop::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='64' height='64' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+.underline-gradient {
+  background-image: linear-gradient(90deg, #b8161d, #e01b24, #ff8c00);
+}
+
+.card-dhanak {
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid rgba(224, 27, 36, 0.25);
+  background: linear-gradient(160deg, rgba(30, 12, 10, 0.94) 0%, rgba(12, 10, 9, 0.97) 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65), 0 0 20px rgba(224, 27, 36, 0.1);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-dhanak:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 107, 0, 0.45);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 27, 36, 0.25);
+}
+
+@keyframes phoenixWingFlap {
+  0% {
+    transform: translateZ(26px) rotateY(-28deg) rotateZ(-12deg) scaleX(0.92);
+  }
+  50% {
+    transform: translateZ(36px) rotateY(32deg) rotateZ(16deg) scaleX(1.08);
+  }
+  100% {
+    transform: translateZ(26px) rotateY(-28deg) rotateZ(-12deg) scaleX(0.92);
+  }
+}
+
+@keyframes phoenixAuraPulse {
+  0%   { transform: scale(0.94); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 0.95; }
+}
+
+/* Admin Portal performance scope: disables blurs, hover transforms, and heavy animations */
+.admin-no-anim *,
+.admin-no-anim *::before,
+.admin-no-anim *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+}
+
+.admin-no-anim .glass-card,
+.admin-no-anim .glass-card:hover {
+  transform: none !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.admin-no-anim .backdrop-blur-md,
+.admin-no-anim .backdrop-blur-xl,
+.admin-no-anim .backdrop-blur-2xl {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}

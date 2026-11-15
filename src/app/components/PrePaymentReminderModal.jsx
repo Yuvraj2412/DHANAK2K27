@@ -1,0 +1,92 @@
+"use client";
+
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import useBodyScrollLock from "../hooks/useBodyScrollLock";
+
+export default function PrePaymentReminderModal({ open, missingMerch, missingAccommodation, missingFood, onContinue, onClose }) {
+  useBodyScrollLock(open);
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[200] flex items-start justify-center overflow-y-auto bg-black/75 p-4 pt-24 backdrop-blur-sm sm:p-6 sm:pt-24 lg:pt-28"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.97 }}
+            transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d0a09] p-5 sm:p-7"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-orange-400/90 mb-2">
+              Before You Pay
+            </p>
+            <h2 className="mb-4 text-xl font-bold text-white sm:text-2xl">
+              Don&apos;t Forget…
+            </h2>
+            <ul className="mb-6 space-y-2 text-sm text-white/60">
+              {missingMerch && (
+                <li className="flex items-start gap-2">
+                  <span className="mt-0.5 text-orange-400">•</span>
+                  You haven&apos;t added any <span className="text-white">merch</span> to your cart yet.
+                </li>
+              )}
+              {missingAccommodation && (
+                <li className="flex items-start gap-2">
+                  <span className="mt-0.5 text-orange-400">•</span>
+                  You haven&apos;t added <span className="text-white">accommodation</span> to your cart yet.
+                </li>
+              )}
+              {missingFood && (
+                <li className="flex items-start gap-2">
+                  <span className="mt-0.5 text-orange-400">•</span>
+                  You&apos;ve added accommodation but no <span className="text-white">food add-ons</span> (breakfast/lunch/dinner) yet.
+                </li>
+              )}
+            </ul>
+
+            <p className="mb-6 rounded-lg border border-orange-500/20 bg-orange-500/[0.06] px-3 py-2 text-[11px] leading-relaxed text-white/50">
+              Note: for group events/workshops, teammates can be added after payment — from your profile page.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                {missingMerch && (
+                  <Link
+                    href="/merch"
+                    onClick={onClose}
+                    className="flex-1 rounded-full border border-white/15 px-6 py-2.5 text-center text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:border-orange-500/50 hover:text-amber-300 transition-colors"
+                  >
+                    Add Merch
+                  </Link>
+                )}
+                {(missingAccommodation || missingFood) && (
+                  <Link
+                    href="/accommodation"
+                    onClick={onClose}
+                    className="flex-1 rounded-full border border-white/15 px-6 py-2.5 text-center text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:border-orange-500/50 hover:text-amber-300 transition-colors"
+                  >
+                    Add Accommodation
+                  </Link>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={onContinue}
+                className="w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black hover:bg-white transition-colors"
+              >
+                Continue to Payment
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}

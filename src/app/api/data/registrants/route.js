@@ -1,0 +1,116 @@
+import { NextResponse } from 'next/server';
+import { createServerSupabase } from '../../_supabase-server';
+import { labelWithDates, paidItemDates } from '@/lib/paidItemDates';
+
+/**
+ * Participant list for one workshop/event, restricted to callers whose own
+ * unique_code is in that item's `access` list. Read-only — this route has
+ * no corresponding write path, matching /data being a view-only page.
+ */
+export async function GET(req) {
+  try {
+    const supabase = createServerSupabase();
+    const authHeader = req.headers.get('authorization') || '';
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    if (!token) {
+      return NextResponse.json({ success: false, message: 'Not signed in.' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const itemId = searchParams.get('item_id');
+    if (!itemId) {
+      return NextResponse.json({ success: false, message: 'item_id is required.' }, { status: 400 });
+    }
+
+    const { data: userData, error: userError } = await supabase.auth.getUser(token);
+    if (userError || !userData?.user) {
+      return NextResponse.json({ success: false, message: 'Not signed in.' }, { status: 401 });
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('unique_code')
+      .eq('user_id', userData.user.id)
+      .maybeSingle();
+
+    if (!profile?.unique_code) {
+      return NextResponse.json({ success: false, message: 'No profile found.' }, { status: 403 });
+    }
+
+    const { data: item } = await supabase
+      .from('catalog_items')
+      .select('id, kind, title, access, group_size')
+      .eq('id', itemId)
+      .maybeSingle();
+
+    if (!item || !Array.isArray(item.access) || !item.access.includes(profile.unique_code)) {
+      return NextResponse.json(
+        { success: false, message: "You haven't been assigned this event or workshop. Ask admin to send permission." },
+        { status: 403 }
+      );
+    }
+
+    const { data: registrations, error } = await supabase
+      .from('registrations')
+      .select('*')
+      .contains('workshop_ids', [itemId]);
+
+    if (error) {
+      return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
+
+    const userIds = (registrations || []).map((r) => r.user_id).filter(Boolean);
+    const { data: profiles } = userIds.length
+      ? await supabase.from('profiles').select('*').in('user_id', userIds)
+      : { data: [] };
+    const profileByUserId = Object.fromEntries((profiles || []).map((p) => [p.user_id, p]));
+
+    const FOOD_IDS = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner']];
+
+    const participants = (registrations || []).map((reg) => {
+      const p = profileByUserId[reg.user_id];
+      const itemsPaid = Array.isArray(reg.details?.items_paid) ? reg.details.items_paid : [];
+      const ids = Array.isArray(reg.workshop_ids) ? reg.workshop_ids.map(String) : [];
+      const stay = paidItemDates(itemsPaid, 'accommodation');
+      const details = reg.details && typeof reg.details === 'object' ? reg.details : {};
+      return {
+        food: FOOD_IDS.filter(([id]) => ids.includes(id))
+          .map(([id, label]) => labelWithDates(label, itemsPaid, id))
+          .join('; '),
+        accommodation: ids.includes('accommodation')
+          ? stay.dates.length
+            ? stay.dates.join(', ')
+            : 'date not chosen'
+          : '',
+        // Guest checkouts (no user_id, so no `profiles` row) still have
+        // name/phone/college/city recorded from the payment itself.
+        name: p?.name || details.name || null,
+        phone: p?.phone || details.phone || null,
+        college: p?.college || details.college || null,
+        city: p?.city || details.city || null,
+        address: p?.address || null,
+        gender: p?.gender || null,
+        aadhaar_number: p?.aadhaar_number || null,
+        unique_code: p?.unique_code || details.unique_code || null,
+        email: reg.email,
+        payment_status: reg.payment_status,
+        status: reg.status,
+        registered_at: reg.created_at,
+      };
+    });
+
+    const { data: teams } = await supabase
+      .from('event_teams')
+      .select('id, leader_unique_code, member_codes, confirmed')
+      .eq('event_id', itemId)
+      .order('created_at', { ascending: true });
+
+    return NextResponse.json({
+      success: true,
+      data: { item: { id: item.id, kind: item.kind, title: item.title, group_size: item.group_size || 1 }, participants, teams: teams || [] },
+    });
+  } catch (err) {
+    console.error('[data/registrants GET]', err);
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+  }
+}
