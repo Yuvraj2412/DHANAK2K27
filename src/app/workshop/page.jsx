@@ -84,8 +84,8 @@ export default function WorkshopPage() {
   const query = search.trim().toLowerCase();
   const filteredCards = query
     ? workshopCards.filter((c) =>
-        [c.title, c.subtitle, c.section, c.type].filter(Boolean).some((v) => v.toLowerCase().includes(query))
-      )
+      [c.title, c.subtitle, c.section, c.type].filter(Boolean).some((v) => v.toLowerCase().includes(query))
+    )
     : workshopCards;
 
   const sections = groupBySection(filteredCards);
@@ -119,7 +119,7 @@ export default function WorkshopPage() {
         <header className="mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-mono font-bold tracking-widest text-[#FFD54F] bg-[#1F0B04] border border-[#FFB300]/40 uppercase mb-4 shadow-sm">
             <Crown size={13} className="text-[#FFD54F]" />
-            <span>Dhanak 2026 · Royal Masterclasses</span>
+            <span>Dhanak 2027 · Royal Masterclasses</span>
           </div>
           <h1
             className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight uppercase mb-3"

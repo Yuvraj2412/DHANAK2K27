@@ -37,6 +37,39 @@ export async function POST(req) {
       customer = {},
     } = body;
 
+    const isFoodOnly =
+      Array.isArray(items) &&
+      items.length > 0 &&
+      items.every((item) => item?.kind === 'food');
+
+    if (!isFoodOnly) {
+      const custName = String(customer.name || notes.name || '').trim();
+      const custPhone = String(customer.phone || notes.phone || '').replace(/\D/g, '').slice(-10);
+      const custCollege = String(customer.college || notes.college || '').trim();
+      const custCollegeId = String(customer.college_id || notes.college_id || '').trim();
+      const custAadhaar = String(customer.aadhaar_number || notes.aadhaar_number || '').replace(/\D/g, '');
+      const custGender = String(customer.gender || notes.gender || '').trim();
+
+      if (
+        !custName ||
+        custPhone.length !== 10 ||
+        !custCollege ||
+        !custCollegeId ||
+        custAadhaar.length !== 12 ||
+        !custGender
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: 'PROFILE_INCOMPLETE',
+            message:
+              'Please complete your profile (Full Name, 10-digit Phone, College, College ID, 12-digit Aadhaar, and Gender) before registering.',
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Resolve total amount in Rupees
     let amountInRupees = Number(amount);
     if (!Number.isFinite(amountInRupees) && Array.isArray(items) && items.length > 0) {

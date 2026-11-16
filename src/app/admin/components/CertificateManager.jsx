@@ -179,7 +179,7 @@ export default function CertificateManager({ users = [], catalog = [], workshopI
     const rows = filteredParticipants.map((p, index) => ({
       'S.No': index + 1,
       'Participant Name': p.name,
-      'Attendee ID (CNS)': p.uniqueCode,
+      'Attendee ID (DHN)': p.uniqueCode,
       'Email': p.email,
       'Phone': p.phone,
       'College / Institution': p.college,
@@ -305,7 +305,7 @@ export default function CertificateManager({ users = [], catalog = [], workshopI
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search participant name, CNS ID, email, or college…"
+            placeholder="Search participant name, DHN-ID, email, or college…"
             className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-3.5 py-2.5 text-xs text-white placeholder-white/30 outline-none transition-colors focus:border-orange-500/50"
           />
           {search && (

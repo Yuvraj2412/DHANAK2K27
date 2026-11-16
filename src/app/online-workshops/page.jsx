@@ -470,8 +470,8 @@ export default function WorkshopRegistration() {
   const merchItem = {
     id: '5',
     name: 'Dhanak Merch',
-    price: 599,
-    desc: 'Official Conscientia 2026 exclusive merchandise.',
+    price: 799,
+    desc: 'Official Dhanak 2027 exclusive merchandise.',
   };
 
   const summerSchoolItem = {
@@ -1222,7 +1222,7 @@ export default function WorkshopRegistration() {
                       Workshop <span className="text-orange-500">FAQ</span>
                     </h1>
                     <p className="mt-4 text-slate-400 max-w-xl">
-                      Everything you need to know about technical requirements, certification, and registration protocols for Conscientia events.
+                      Everything you need to know about technical requirements, certification, and registration protocols for Dhanak workshops and events.
                     </p>
                   </div>
 
@@ -1258,7 +1258,7 @@ export default function WorkshopRegistration() {
                       <span className="text-slate-500 text-sm">Still confused?</span>
                       <span className="text-white font-semibold">Contact the Team</span>
                     </div>
-                    <a href='mailto:conscientiateamiist@gmail.com' target='_blank' className="px-6 py-2 bg-orange-600/10 hover:bg-orange-600/20 border border-orange-500/40 text-orange-400 rounded-lg text-sm font-medium transition-all">
+                    <a href='/contact-us' className="px-6 py-2 bg-orange-600/10 hover:bg-orange-600/20 border border-orange-500/40 text-orange-400 rounded-lg text-sm font-medium transition-all">
                       Open Ticket
                     </a>
                   </div>

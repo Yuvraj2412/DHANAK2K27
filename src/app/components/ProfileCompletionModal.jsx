@@ -8,18 +8,13 @@ import { useAuth } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import useBodyScrollLock from "../hooks/useBodyScrollLock";
 import { FEST_NAME, FEST_YEAR } from "@/lib/festConfig";
+import { isProfileComplete, PROFILE_REQUIRED_EVENT } from "@/lib/profileCompletion";
 
 export default function ProfileCompletionModal() {
   const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
-  const { user } = useAuth();
+  const isAdminRoute = pathname?.startsWith("/admin") || pathname?.startsWith("/foodfestadmin");
+  const { user, signOut } = useAuth();
   const { profile, loading, save } = useProfile();
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.sessionStorage.getItem("dhanak_profile_modal_dismissed") === "1";
-    }
-    return false;
-  });
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -32,27 +27,21 @@ export default function ProfileCompletionModal() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const missing =
-    !loading &&
-    !!user &&
-    (!profile ||
-      !profile.name ||
-      !profile.phone ||
-      !profile.college ||
-      !profile.college_id ||
-      !profile.aadhaar_number ||
-      !profile.gender);
+  const missing = !loading && !!user && !isProfileComplete(profile);
 
-  const isOpen = !isAdminRoute && missing && !dismissed;
+  const isOpen = !isAdminRoute && missing;
 
   useBodyScrollLock(isOpen);
 
-  const handleDismiss = () => {
-    setDismissed(true);
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem("dhanak_profile_modal_dismissed", "1");
-    }
-  };
+  useEffect(() => {
+    const reopen = () => {
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem("dhanak_profile_modal_dismissed");
+      }
+    };
+    window.addEventListener(PROFILE_REQUIRED_EVENT, reopen);
+    return () => window.removeEventListener(PROFILE_REQUIRED_EVENT, reopen);
+  }, []);
 
   useEffect(() => {
     if (profile) {
@@ -136,22 +125,14 @@ export default function ProfileCompletionModal() {
             transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
             className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-amber-500/25 bg-[#0F0A07] p-5 sm:p-7 shadow-[0_20px_60px_rgba(0,0,0,0.85)]"
           >
-            <button
-              type="button"
-              onClick={handleDismiss}
-              className="absolute top-4 right-4 rounded-full p-1.5 text-white/40 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
-            >
-              <X size={18} />
-            </button>
             <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-amber-400 font-bold mb-2">
-              {FEST_NAME} {FEST_YEAR} · Attendee Pass
+              {FEST_NAME} {FEST_YEAR} · Mandatory Attendee Profile
             </p>
             <h2 className="mb-2 text-xl font-bold text-white sm:text-2xl tracking-tight">
               Complete Your Profile
             </h2>
             <p className="mb-5 text-xs sm:text-sm text-white/60 leading-relaxed">
-              We need a few details to register you for {FEST_NAME} events and workshops. Physical ID verification happens at the fest registration desk.
+              Completing your profile is required before registering for {FEST_NAME} workshops and events. Physical ID verification happens at the fest registration desk.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -260,10 +241,10 @@ export default function ProfileCompletionModal() {
 
               <button
                 type="button"
-                onClick={handleDismiss}
+                onClick={() => signOut()}
                 className="w-full text-center text-xs text-white/45 hover:text-white/80 transition-colors pt-1 cursor-pointer"
               >
-                I&apos;ll complete this later ›
+                Sign out / use a different account
               </button>
             </form>
           </motion.div>

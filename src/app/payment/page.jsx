@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import useProfile from '../hooks/useProfile';
+import { isProfileComplete, promptProfileCompletion } from '@/lib/profileCompletion';
 import { loadRazorpayScript, saveCheckoutSessionToStorage } from '@/lib/checkout';
 import { RAZORPAY_LOGO_DATA_URL } from '@/lib/razorpayLogo';
 import TeamRosterBuilder from '../components/TeamRosterBuilder';
@@ -189,6 +190,24 @@ function RazorpayStandardCheckoutPage() {
   const handleRazorpayCheckout = useCallback(async () => {
     if (processing) return;
     setErrorBanner(null);
+
+    if (!user) {
+      router.push('/login?redirect=/cart');
+      return;
+    }
+
+    const isFoodOnly =
+      displayItems.length > 0 && displayItems.every((i) => i.kind === 'food');
+
+    if (!isFoodOnly && !isProfileComplete(attendeeDetails) && !isProfileComplete(profile)) {
+      setErrorBanner({
+        title: 'Profile Incomplete',
+        message:
+          'Please complete your profile (Full Name, Phone, College, College ID, 12-digit Aadhaar, and Gender) before registering for workshops or events.',
+      });
+      promptProfileCompletion();
+      return;
+    }
 
     // Trigger check: verify all teams are complete or explicitly permitted
     if (!teamState.isAllTeamsValid) {

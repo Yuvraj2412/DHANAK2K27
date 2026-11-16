@@ -15,6 +15,7 @@ import useIsTouch from "@/app/hooks/useIsTouch";
 import useCapacity from "@/app/hooks/useCapacity";
 import { showCartToast } from "@/lib/cartToast";
 import { parsePriceLabel } from "@/lib/parsePriceLabel";
+import { isProfileComplete, promptProfileCompletion } from "@/lib/profileCompletion";
 import EvergreenCountdown from "@/app/components/EvergreenCountdown";
 import TeamReminderModal from "@/app/components/TeamReminderModal";
 import { supabase } from "@/lib/supabaseClient";
@@ -463,6 +464,18 @@ export default function EventFullDetail({ id: propId }) {
 
   const handleAddToCart = () => {
     if (!card || inCart || isClosed || isRegistered) return;
+    if (!user) {
+      playClick();
+      router.push(`/login?redirect=${encodeURIComponent(`/events/${card.id}`)}`);
+      return;
+    }
+    if (!isProfileComplete(profile)) {
+      playClick();
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
+      router.push("/profile");
+      return;
+    }
     playGlitch();
     addItem(toCartItem());
     showCartToast("Added to cart");
@@ -479,7 +492,9 @@ export default function EventFullDetail({ id: propId }) {
       router.push(`/login?redirect=${encodeURIComponent(`/events/${card.id}`)}`);
       return;
     }
-    if (!profile?.name || !profile?.phone || !profile?.college || !profile?.college_id || !profile?.aadhaar_number) {
+    if (!isProfileComplete(profile)) {
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
       router.push("/profile");
       return;
     }

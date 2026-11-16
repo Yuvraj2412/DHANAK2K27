@@ -175,7 +175,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FF7A00',
     glowColor: 'rgba(255, 122, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #261002, #522305, #0c0401)',
-    image: 'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/solo-dance-v2.jpg',
     description:
       'One dancer. One spotlight. Command the floor with your rhythm, expression, and footwork in Dhanak’s Solo Dance showdown across Classical, Western, Hip-Hop, Popping, and Contemporary styles.',
     aboutExtra: [
@@ -219,7 +219,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FF8F00',
     glowColor: 'rgba(255, 143, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #261402, #522b06, #0d0501)',
-    image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/solo-singing-v2.jpg',
     description:
       'Let your voice echo through Valiamala. Whether it is soulful Bollywood melodies, Carnatic/Hindustani classical nuances, or soaring Western pop and rock vocals, take the mic and captivate the room.',
     aboutExtra: [
@@ -263,7 +263,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FFA000',
     glowColor: 'rgba(255, 160, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #241602, #4d2e05, #0a0600)',
-    image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/instrumentals.jpg',
     description:
       'Pure musical storytelling without a single spoken word. Showcase your command over guitar, piano/keyboard, drums, violin, flute, tabla, or any classical or western instrument.',
     aboutExtra: [
@@ -307,7 +307,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FF6F00',
     glowColor: 'rgba(255, 111, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #291102, #572305, #0d0400)',
-    image: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/mono-acting.jpg',
     description:
       'One actor, countless characters, raw emotion. Step onto the stage alone and command the audience through powerful monologues, rapid character switches, mime, or dramatic storytelling.',
     aboutExtra: [
@@ -355,11 +355,11 @@ export const DHANAK_EVENTS = [
     accentColor: '#FFB800',
     glowColor: 'rgba(255, 184, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #241902, #4d3505, #0a0700)',
-    image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/mocksharktank.jpg',
     description:
       'Step into the tank and pitch your startup idea, disruptive product, or wild business model to a panel of ruthless Sharks. Defend your unit economics, negotiate equity live, and secure the virtual investment!',
     aboutExtra: [
-      'Adopted from the popular Conscientia & Dhanak entrepreneurship arena — combines sharp business acumen with high-stakes boardroom drama.',
+      'Dhanak’s flagship entrepreneurship arena — combines sharp business acumen with high-stakes boardroom drama.',
     ],
     highlights: [
       '5-minute startup pitch deck presentation followed by 5-minute Shark Q&A and equity negotiation',
@@ -443,7 +443,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FF9800',
     glowColor: 'rgba(255, 152, 0, 0.45)',
     foilGradient: 'linear-gradient(135deg, #261402, #522b05, #0a0500)',
-    image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/anime-quiz-v2.jpg',
     description:
       'From the Big Three and Studio Ghibli classics to seasonal bangers, iconic Openings/Endings, voice actors, and manga panels — prove your power level in Dhanak’s ultimate Anime Quiz.',
     aboutExtra: [
@@ -487,9 +487,9 @@ export const DHANAK_EVENTS = [
     accentColor: '#FFC107',
     glowColor: 'rgba(255, 193, 7, 0.45)',
     foilGradient: 'linear-gradient(135deg, #241b02, #4d3905, #0a0700)',
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/painting.jpg',
     description:
-      'Translate the theme of "Embers from Ashes" onto canvas with vibrant strokes, textures, and imagination. Bring your brushes and palettes for a 2.5-hour live painting marathon.',
+      'Translate the theme of "Ember from Ashes" onto canvas with vibrant strokes, textures, and imagination. Bring your brushes and palettes for a 2.5-hour live painting marathon.',
     aboutExtra: [
       'Drawing sheets/canvases are provided at the venue; artists may use acrylics, watercolors, poster colors, or mixed media.',
     ],
@@ -531,7 +531,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#FFCA28',
     glowColor: 'rgba(255, 202, 40, 0.45)',
     foilGradient: 'linear-gradient(135deg, #241c02, #4d3b05, #0a0800)',
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/origami.jpg',
     description:
       'Transform flat sheets of paper into breathtaking phoenixes, dragons, modular polyhedra, and intricate 3D sculptures without cuts or glue in Dhanak’s Origami artistry challenge.',
     aboutExtra: [
@@ -623,7 +623,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#F43F5E',
     glowColor: 'rgba(244, 63, 94, 0.45)',
     foilGradient: 'linear-gradient(135deg, #29060c, #540d19, #0d0204)',
-    image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/creative-journalism.jpg',
     description:
       'Step into a fast-moving newsroom! Interrogate witnesses in a simulated crisis press conference, uncover hidden leads, and publish a hard-hitting front-page investigative report or satirical op-ed.',
     aboutExtra: [
@@ -667,7 +667,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#DB2777',
     glowColor: 'rgba(219, 39, 119, 0.45)',
     foilGradient: 'linear-gradient(135deg, #260615, #4f0c2c, #0a0207)',
-    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/group-discussion.jpg',
     description:
       'Command the table with clarity, logic, and persuasion. Navigate geopolitical, ethical, cultural, and futuristic dilemmas in moderated panel rounds where listening is as vital as leading.',
     aboutExtra: [
@@ -807,7 +807,7 @@ export const DHANAK_EVENTS = [
     description:
       'Put on your detective trench coat! Step into a live crime-scene investigation, examine forensic evidence, cross-check alibis, and expose the culprit, motive, and weapon before time expires.',
     aboutExtra: [
-      'Inspired by Conscientia’s hit mystery room — features live actors, redacted dossiers, and hidden physical clues.',
+      'Dhanak’s signature mystery room — features live actors, redacted dossiers, and hidden physical clues.',
     ],
     highlights: [
       'Interactive crime scene with physical evidence, ciphered diaries, and alibi logs',
@@ -983,7 +983,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#06B6D4',
     glowColor: 'rgba(6, 182, 212, 0.45)',
     foilGradient: 'linear-gradient(135deg, #042126, #084752, #010a0d)',
-    image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/short-film.jpg',
     description:
       'Lights, camera, vision! Submit your original short film and compete for Best Picture, Best Direction, Best Cinematography, and Best Editing in Dhanak’s national short film festival.',
     aboutExtra: [
@@ -991,7 +991,7 @@ export const DHANAK_EVENTS = [
     ],
     highlights: [
       'Film duration: 3 to 15 minutes (including credits)',
-      'Open theme + special bonus category for "Embers from Ashes" motif',
+      'Open theme + special bonus category for "Ember from Ashes" motif',
       'Judged on screenplay, direction, cinematography, sound design, and editing',
     ],
     requirements: [
@@ -1027,7 +1027,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#0EA5E9',
     glowColor: 'rgba(14, 165, 233, 0.45)',
     foilGradient: 'linear-gradient(135deg, #041926, #083754, #01070d)',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/photography.jpg',
     description:
       'Freeze a fleeting moment in time. Submit your finest shots in Street, Light & Shadow, Portrait, or Nature photography and have your work exhibited at the Dhanak Visual Gallery.',
     aboutExtra: [
@@ -1071,7 +1071,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#22D3EE',
     glowColor: 'rgba(34, 211, 238, 0.45)',
     foilGradient: 'linear-gradient(135deg, #042226, #084852, #010b0d)',
-    image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/reel-and-meme-making.jpg',
     description:
       'Turn transitions, trends, and punchlines into gold! Compete in two high-engagement tracks: cinematic/energetic Reels and original Meme creation that captures college life and cultural chaos.',
     aboutExtra: [
@@ -1115,7 +1115,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#33D6FF',
     glowColor: 'rgba(51, 214, 255, 0.5)',
     foilGradient: 'linear-gradient(135deg, #0b1c2f, #123f5d, #081019)',
-    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/bgmi.jpg',
     description:
       'Squad up, drop into Erangel and Miramar, and battle it out in Dhanak’s flagship BGMI tournament. Out-rotate, out-gun, and outlast 16-squad custom lobbies to claim the Chicken Dinner!',
     aboutExtra: [
@@ -1160,7 +1160,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#38BDF8',
     glowColor: 'rgba(56, 189, 248, 0.5)',
     foilGradient: 'linear-gradient(135deg, #071929, #0f3657, #03090f)',
-    image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/ff.jpg',
     description:
       'Fast-paced gloo-wall rushes, clutch revives, and intense final zones! Enter Dhanak’s Free Fire MAX squad tournament and fight for the ultimate Booyah.',
     aboutExtra: [
@@ -1204,7 +1204,7 @@ export const DHANAK_EVENTS = [
     accentColor: '#22C55E',
     glowColor: 'rgba(34, 197, 94, 0.45)',
     foilGradient: 'linear-gradient(135deg, #052112, #0c4727, #020a05)',
-    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80',
+    image: '/assets/events/clashroyale.jpg',
     description:
       'Build your 8-card battle deck, count your opponent’s elixir, and defend your King Tower in Dhanak’s 1v1 Clash Royale knockout bracket!',
     aboutExtra: [

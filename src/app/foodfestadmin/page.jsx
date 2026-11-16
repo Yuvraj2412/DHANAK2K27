@@ -571,7 +571,7 @@ function OrdersTab({ password, pushToast }) {
               </div>
               <p className="mb-2 truncate text-xs text-white/50">
                 {order.email} · {order.phone}
-                {order.cns_id && <> · CNS ID: <span className="text-white/70">{order.cns_id}</span></>}
+                {order.cns_id && <> · DHN-ID: <span className="text-white/70">{order.cns_id}</span></>}
               </p>
               <ul className="mb-2 space-y-0.5 text-sm text-white/70">
                 {(order.items || []).map((it, i) => (

@@ -290,7 +290,7 @@ function FailureContent() {
 
         <p className="mt-6 text-[11px] text-white/40">
           Need immediate assistance? Email us at{' '}
-          <span className="text-white/70 font-mono">{CONTACT_EMAIL !== 'TBD' ? CONTACT_EMAIL : 'dhanak2026@iist.ac.in'}</span>
+          <span className="text-white/70 font-mono">{CONTACT_EMAIL !== 'TBD' ? CONTACT_EMAIL : 'dhanak@iist.ac.in'}</span>
         </p>
       </motion.div>
     </div>

@@ -117,7 +117,7 @@ export default function LoadingState({
             color: "rgba(255, 180, 0, 0.55)",
           }}
         >
-          Dhanak 2026 · IIST
+          Dhanak 2027 · IIST
         </p>
       </div>
 

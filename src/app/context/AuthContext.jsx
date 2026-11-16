@@ -3,15 +3,69 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
 import { CHECKOUT_STORAGE_KEYS } from '@/lib/checkout';
+import { generateUniqueCode } from '@/lib/uniqueCode';
 
 const AuthContext = createContext({
   user: null,
   loading: true,
   authenticate: async () => ({ error: 'not_ready' }),
+  verifyEmailOtp: async () => ({ error: 'not_ready' }),
+  resendVerificationEmail: async () => ({ error: 'not_ready' }),
+  requestPasswordReset: async () => ({ error: 'not_ready' }),
+  resetPasswordWithOtp: async () => ({ error: 'not_ready' }),
   authenticateWithGoogle: async () => ({ error: 'not_ready' }),
+  signInWithGoogleOAuth: async () => ({ error: 'not_ready' }),
   devLogin: async () => ({ user: null }),
   signOut: async () => {},
 });
+
+function isVerifiedUser(u) {
+  if (!u || !u.email) return false;
+  // Verified via Google Identity Services or Google OAuth
+  if (
+    String(u.id || '').startsWith('dhanak_google_') ||
+    u.app_metadata?.provider === 'google' ||
+    (Array.isArray(u.app_metadata?.providers) && u.app_metadata.providers.includes('google'))
+  ) {
+    return true;
+  }
+  // Verified via phone OTP
+  if (u.user_metadata?.phone_verified) {
+    return true;
+  }
+  // Email-password user must have email_confirmed_at set
+  return Boolean(u.email_confirmed_at || u.confirmed_at);
+}
+
+async function ensureClientProfileRow(sessionUser) {
+  if (!sessionUser?.id || !sessionUser?.email || !isSupabaseConfigured()) return;
+  if (String(sessionUser.id).startsWith('dhanak_')) return;
+  try {
+    const { data: existing } = await supabase
+      .from('profiles')
+      .select('user_id')
+      .eq('user_id', sessionUser.id)
+      .maybeSingle();
+
+    if (!existing) {
+      const displayName =
+        sessionUser.user_metadata?.full_name ||
+        sessionUser.user_metadata?.name ||
+        null;
+      await supabase.from('profiles').upsert(
+        {
+          user_id: sessionUser.id,
+          email: sessionUser.email.toLowerCase(),
+          unique_code: generateUniqueCode(),
+          ...(displayName ? { name: displayName } : {}),
+        },
+        { onConflict: 'user_id' }
+      );
+    }
+  } catch {
+    // Non-fatal; ProfileContext will handle upsert on save
+  }
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -20,19 +74,21 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let active = true;
 
-    // Check if we have a persisted dev user in localStorage first
+    // Check if we have a persisted verified user in localStorage
     if (typeof window !== 'undefined') {
       try {
         const cachedUser = window.localStorage.getItem('dhanak_auth_user');
         if (cachedUser) {
           const parsed = JSON.parse(cachedUser);
-          if (parsed && parsed.email) {
+          if (parsed && isVerifiedUser(parsed)) {
             setUser(parsed);
             setLoading(false);
+          } else {
+            window.localStorage.removeItem('dhanak_auth_user');
           }
         }
       } catch (err) {
-        console.warn('[AuthContext] error reading cached dev user', err);
+        console.warn('[AuthContext] error reading cached user', err);
       }
     }
 
@@ -43,41 +99,81 @@ export function AuthProvider({ children }) {
       };
     }
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!active) return;
-      if (data?.session) {
-        setUser(data.session.user);
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
-        }
-        setLoading(false);
-        return;
-      }
+    // Handle email confirmation callback params (?token_hash=...&type=... or ?code=...)
+    const handleUrlConfirmation = async () => {
+      if (typeof window === 'undefined') return;
       try {
-        const { data: userData } = await supabase.auth.getUser();
-        if (!active) return;
-        if (userData?.user) {
-          setUser(userData.user);
-          if (typeof window !== 'undefined') {
-            window.localStorage.setItem('dhanak_auth_user', JSON.stringify(userData.user));
+        const params = new URLSearchParams(window.location.search);
+        const tokenHash = params.get('token_hash');
+        const type = params.get('type') || 'signup';
+        const code = params.get('code');
+
+        if (tokenHash) {
+          const { data } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type,
+          });
+          if (active && data?.session?.user && isVerifiedUser(data.session.user)) {
+            setUser(data.session.user);
+            window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+            await ensureClientProfileRow(data.session.user);
+          }
+        } else if (code) {
+          const { data } = await supabase.auth.exchangeCodeForSession(code);
+          if (active && data?.session?.user && isVerifiedUser(data.session.user)) {
+            setUser(data.session.user);
+            window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+            await ensureClientProfileRow(data.session.user);
           }
         }
-      } catch {
-        // Fallback or offline
-      } finally {
-        if (active) setLoading(false);
+      } catch (err) {
+        console.warn('[AuthContext] URL confirmation check:', err?.message);
       }
-    }).catch(() => {
-      if (active) setLoading(false);
+    };
+
+    handleUrlConfirmation().finally(() => {
+      supabase.auth
+        .getSession()
+        .then(async ({ data }) => {
+          if (!active) return;
+          if (data?.session?.user && isVerifiedUser(data.session.user)) {
+            setUser(data.session.user);
+            if (typeof window !== 'undefined') {
+              window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+            }
+            await ensureClientProfileRow(data.session.user);
+            setLoading(false);
+            return;
+          }
+          try {
+            const { data: userData } = await supabase.auth.getUser();
+            if (!active) return;
+            if (userData?.user && isVerifiedUser(userData.user)) {
+              setUser(userData.user);
+              if (typeof window !== 'undefined') {
+                window.localStorage.setItem('dhanak_auth_user', JSON.stringify(userData.user));
+              }
+              await ensureClientProfileRow(userData.user);
+            }
+          } catch {
+            // Offline or no active Supabase session
+          } finally {
+            if (active) setLoading(false);
+          }
+        })
+        .catch(() => {
+          if (active) setLoading(false);
+        });
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (!active) return;
-      if (session) {
+      if (session?.user && isVerifiedUser(session.user)) {
         setUser(session.user);
         if (typeof window !== 'undefined') {
           window.localStorage.setItem('dhanak_auth_user', JSON.stringify(session.user));
         }
+        ensureClientProfileRow(session.user);
         setLoading(false);
         return;
       }
@@ -96,13 +192,13 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  // Fast 1-click dev login helper for Dhanak demo & testing
   const devLogin = useCallback(async (customEmail) => {
     const email = (customEmail || 'dhanak2026@iist.ac.in').toLowerCase();
     const hexPart = Math.random().toString(36).substring(2, 8);
     const mockUser = {
       id: `dhanak_user_${hexPart}`,
       email,
+      email_confirmed_at: new Date().toISOString(),
       user_metadata: { name: 'Dhanak Participant' },
       aud: 'authenticated',
       role: 'authenticated',
@@ -114,14 +210,8 @@ export function AuthProvider({ children }) {
     return { user: mockUser, created: false };
   }, []);
 
-  // Single "log in, or create an account if none exists" call
   const authenticate = useCallback(async (email, password, mode = 'login') => {
     const trimmedEmail = email.trim().toLowerCase();
-
-    // If Supabase is unconfigured, immediately use devLogin
-    if (!isSupabaseConfigured()) {
-      return devLogin(trimmedEmail);
-    }
 
     try {
       const res = await fetch('/api/auth', {
@@ -131,10 +221,16 @@ export function AuthProvider({ children }) {
       });
       const data = await res.json().catch(() => ({}));
 
+      if (data?.requiresVerification) {
+        return {
+          requiresVerification: true,
+          email: data.email || trimmedEmail,
+          message: data.message || null,
+          error: data.error || null,
+        };
+      }
+
       if (!res.ok || data.error) {
-        if (data.devMode || !isSupabaseConfigured()) {
-          return devLogin(trimmedEmail);
-        }
         return { error: data.error || 'Authentication failed.' };
       }
 
@@ -149,19 +245,117 @@ export function AuthProvider({ children }) {
             refresh_token: data.session.refresh_token,
           });
         } catch {
-          // If setSession fails due to mock tokens, user is still authenticated in state
+          // Ignore if non-JWT session
         }
         return { user: data.session.user, created: data.created };
       }
 
       return { error: 'Authentication failed. Please check your credentials.' };
     } catch (err) {
-      if (!isSupabaseConfigured()) {
-        return devLogin(trimmedEmail);
-      }
       return { error: err.message || 'Connection error. Please try again.' };
     }
-  }, [devLogin]);
+  }, []);
+
+  const verifyEmailOtp = useCallback(async (email, otp) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail, otp: String(otp || '').trim(), mode: 'verify-otp' }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || data.error) {
+        return { error: data.error || 'Invalid or expired verification code.' };
+      }
+
+      if (data?.session?.user) {
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+        }
+        setUser(data.session.user);
+        try {
+          await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          });
+        } catch {
+          // Ignore
+        }
+        return { user: data.session.user, verified: true };
+      }
+
+      return { error: 'Could not verify code. Please try again.' };
+    } catch (err) {
+      return { error: err.message || 'Connection error. Please try again.' };
+    }
+  }, []);
+
+  const resendVerificationEmail = useCallback(async (email) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail, mode: 'resend' }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.error) {
+        return { error: data.error || 'Could not resend verification email.' };
+      }
+      return { ok: true, message: data.message || 'Verification email resent!' };
+    } catch (err) {
+      return { error: err.message || 'Connection error. Please try again.' };
+    }
+  }, []);
+
+  const requestPasswordReset = useCallback(async (email) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail, mode: 'forgot-password' }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.error) {
+        return { error: data.error || 'Could not send password reset OTP.' };
+      }
+      return {
+        ok: true,
+        message: data.message || 'Password reset OTP sent! Please check your inbox and spam folder.',
+      };
+    } catch (err) {
+      return { error: err.message || 'Connection error. Please try again.' };
+    }
+  }, []);
+
+  const resetPasswordWithOtp = useCallback(async (email, otp, newPassword) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          otp: String(otp || '').trim(),
+          newPassword,
+          mode: 'reset-password',
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.error) {
+        return { error: data.error || 'Could not reset password. Please check your OTP and try again.' };
+      }
+      return {
+        ok: true,
+        message: data.message || 'Password updated successfully! Please sign in with your new password.',
+      };
+    } catch (err) {
+      return { error: err.message || 'Connection error. Please try again.' };
+    }
+  }, []);
 
   const authenticateWithGoogle = useCallback(async (idToken) => {
     const res = await fetch('/api/auth/google', {
@@ -194,6 +388,52 @@ export function AuthProvider({ children }) {
     return { error: 'Invalid Google session' };
   }, []);
 
+  const signInWithGoogleOAuth = useCallback(async (redirectPath = '/') => {
+    if (!isSupabaseConfigured()) {
+      return { error: 'Supabase is not configured.' };
+    }
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey =
+        process.env.NEXT_PUBLIC_SUPABASE_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      // Verify Google provider is actually enabled in Supabase before redirecting,
+      // otherwise Supabase renders a raw 400 JSON error page ("Unsupported provider").
+      if (supabaseUrl && supabaseKey) {
+        const settingsRes = await fetch(`${supabaseUrl}/auth/v1/settings`, {
+          headers: { apikey: supabaseKey },
+        }).catch(() => null);
+        if (settingsRes?.ok) {
+          const settings = await settingsRes.json().catch(() => null);
+          if (settings?.external && settings.external.google === false) {
+            return {
+              error: 'Unsupported provider: provider is not enabled',
+            };
+          }
+        }
+      }
+
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const redirectTo = `${origin}/login?redirect=${encodeURIComponent(redirectPath)}`;
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      return { data };
+    } catch (err) {
+      return { error: err.message || 'Google Sign-In failed.' };
+    }
+  }, []);
+
   const signOut = useCallback(async () => {
     try {
       if (isSupabaseConfigured()) {
@@ -207,6 +447,7 @@ export function AuthProvider({ children }) {
       window.localStorage.removeItem('conscientia_cart');
       window.localStorage.removeItem('dhanak_auth_user');
       window.localStorage.removeItem('dhanak_profile_data');
+      window.sessionStorage.removeItem('dhanak_profile_modal_dismissed');
     }
     setUser(null);
   }, []);
@@ -225,7 +466,12 @@ export function AuthProvider({ children }) {
         user,
         loading,
         authenticate,
+        verifyEmailOtp,
+        resendVerificationEmail,
+        requestPasswordReset,
+        resetPasswordWithOtp,
         authenticateWithGoogle,
+        signInWithGoogleOAuth,
         loginWithPhoneUser,
         devLogin,
         signOut,

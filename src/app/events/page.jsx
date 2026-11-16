@@ -121,7 +121,7 @@ export default function EventsPage() {
         <header className="mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-mono font-bold tracking-widest text-[#FFD54F] bg-[#1F0B04] border border-[#FFB300]/40 uppercase mb-4 shadow-sm">
             <Crown size={13} className="text-[#FFD54F]" />
-            <span>Dhanak 2026 · Official Competitions</span>
+            <span>Dhanak 2027 · Official Competitions</span>
           </div>
 
           <h1

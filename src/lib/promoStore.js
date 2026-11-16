@@ -3,9 +3,9 @@ import { supabase, isSupabaseConfigured } from './supabaseClient';
 export const DEFAULT_PROMOS = {
   limited_drop: {
     badge_label: 'Limited drop',
-    heading: 'Get official Dhanak Merch',
-    description: 'ISRO Mission Man on Moon 2040 Zip Hoodie — limited run.',
-    price: '₹499',
+    heading: 'Gear up for DHANAK 2027',
+    description: 'ISRO Mission Man on Moon 2040 Zip Hoodie — ₹799 (₹849 if shipping out).',
+    price: '₹799',
     link: '/merch',
     image_front: '/merch/isro-hoodie-front.jpg',
     image_back: '/merch/isro-hoodie-back.jpg',
@@ -14,9 +14,9 @@ export const DEFAULT_PROMOS = {
   },
   exclusive: {
     badge_label: 'Exclusive',
-    heading: 'Festival Merch',
-    description: 'ISRO Mission Man on Moon 2040 Zip Hoodie — add at checkout',
-    price: '₹499',
+    heading: 'Gear up for DHANAK 2027',
+    description: 'ISRO Mission Man on Moon 2040 Zip Hoodie — ₹799 (₹849 if shipping out)',
+    price: '₹799',
     link: '/merch',
     image_front: '/merch/isro-hoodie-front.jpg',
     image_back: '/merch/isro-hoodie-back.jpg',

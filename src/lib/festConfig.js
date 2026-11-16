@@ -8,7 +8,7 @@
 export const FEST_NAME = 'Dhanak';
 export const FEST_YEAR = '2027';
 export const FEST_FULL_NAME = 'Dhanak 2027';
-export const FEST_TAGLINE = 'Embers from Ashes';
+export const FEST_TAGLINE = 'Ember from Ashes';
 export const FEST_SUBTITLE = 'The Annual Cultural Festival of IIST';
 export const FEST_INSTITUTE = 'Indian Institute of Space Science and Technology';
 export const FEST_INSTITUTE_SHORT = 'IIST';

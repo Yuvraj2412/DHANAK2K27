@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMusic } from "../context/MusicContext";
 import useProfile from "../hooks/useProfile";
 import useBodyScrollLock from "../hooks/useBodyScrollLock";
-import { NAV_LINKS, FEST_NAME, FEST_TAGLINE, SOCIAL_LINKS } from "@/lib/festConfig";
+import { NAV_LINKS, FEST_NAME, FEST_TAGLINE, FEST_INSTITUTE, FEST_INSTITUTE_SHORT, SOCIAL_LINKS } from "@/lib/festConfig";
 
 function MusicDisc({
   playing,
@@ -154,9 +154,9 @@ export default function Nav() {
           : "h-14 sm:h-20 md:h-24 bg-[#0C0A09]/80 backdrop-blur-md sm:backdrop-blur-xl border-orange-900/35 shadow-[0_10px_40px_rgba(0,0,0,0.6)]"
           }`}
       >
-        {/* Logo / Brand */}
-        <div className="flex items-center shrink-0 leading-none select-none transition-transform duration-200 hover:scale-[1.03]">
-          <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-1.5 sm:gap-3 group">
+        {/* Logo / Brand + Institute */}
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0 leading-none select-none">
+          <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-1.5 sm:gap-3 group transition-transform duration-200 hover:scale-[1.03]">
             <div className="relative w-7 h-7 sm:w-10 sm:h-10 shrink-0 transition-transform duration-300 group-hover:scale-110">
               <Image
                 src="/assets/dhanak-logo.png"
@@ -188,6 +188,33 @@ export default function Nav() {
                 {FEST_TAGLINE}
               </span>
             </div>
+          </Link>
+
+          <span aria-hidden="true" className="h-6 sm:h-8 w-px bg-white/15 shrink-0" />
+
+          <Link
+            href="/#about-iist"
+            onClick={() => setIsMenuOpen(false)}
+            title={FEST_INSTITUTE}
+            className="flex items-center gap-1.5 sm:gap-2.5 group min-w-0"
+          >
+            <div className="relative w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 shrink-0 rounded-full overflow-hidden bg-white border border-white/25 shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-transform duration-300 group-hover:scale-105">
+              <Image
+                src="/assets/iist-header-logo.jpg"
+                alt={`${FEST_INSTITUTE} Logo`}
+                width={36}
+                height={36}
+                sizes="(max-width: 640px) 24px, 36px"
+                priority
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <span className="hidden sm:inline md:hidden font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/90 group-hover:text-amber-300 transition-colors">
+              {FEST_INSTITUTE_SHORT}
+            </span>
+            <span className="hidden md:inline font-mono text-[10px] lg:text-[11px] font-semibold tracking-[0.06em] text-white/90 group-hover:text-amber-300 transition-colors leading-tight max-w-[190px] lg:max-w-none">
+              {FEST_INSTITUTE}
+            </span>
           </Link>
         </div>
 

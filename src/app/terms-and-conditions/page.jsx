@@ -32,7 +32,7 @@ const sections = [
     bullets: [
       'Participation in Dhanak workshops, cultural competitions, pronites, and campus accommodation is open to bonafide school, college, polytechnic, and university students as well as eligible individual participants as specified in each event’s rules.',
       'Upon signing in, you must provide accurate, complete, and verifiable personal information—including your full name, valid mobile number, institution name, college ID number, and 12-digit Aadhaar / Government ID number.',
-      'Upon registration, each user is assigned a unique Attendee ID (DHN-ID / CNS-ID). This ID is strictly personal and non-transferable.',
+      'Upon registration, each user is assigned a unique Attendee ID (DHN-ID). This ID is strictly personal and non-transferable.',
       'Providing forged, false, or misleading identity details may result in immediate cancellation of registration and denial of entry to the IIST Valiamala campus without refund.',
     ],
   },

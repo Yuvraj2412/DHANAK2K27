@@ -77,7 +77,7 @@ export async function PATCH(req) {
 
     if (!memberCodes.includes(team.leader_unique_code)) {
       return NextResponse.json(
-        { success: false, message: `Roster must include the leader's CNS-id (${team.leader_unique_code}).` },
+        { success: false, message: `Roster must include the leader's DHN-ID (${team.leader_unique_code}).` },
         { status: 400 }
       );
     }
@@ -95,7 +95,7 @@ export async function PATCH(req) {
     const { profiles: memberProfiles, missing } = await resolveMemberProfiles(supabase, otherCodes);
     if (missing.length > 0) {
       return NextResponse.json(
-        { success: false, message: `No account found for CNS-id${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.` },
+        { success: false, message: `No account found for DHN-ID${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.` },
         { status: 400 }
       );
     }

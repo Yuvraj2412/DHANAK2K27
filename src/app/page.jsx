@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { FEST_NAME, FEST_YEAR, FEST_TAGLINE, FEST_SUBTITLE, FEST_INSTITUTE_SHORT, FESTIVAL_DAYS } from "@/lib/festConfig";
+import { FEST_NAME, FEST_YEAR, FEST_TAGLINE, FEST_SUBTITLE, FEST_INSTITUTE, FEST_INSTITUTE_SHORT, FESTIVAL_DAYS } from "@/lib/festConfig";
 import { DHANAK_WORKSHOPS } from "@/lib/dhanakWorkshops";
 import { DHANAK_EVENTS } from "@/lib/dhanakEvents";
 import LavaWorkshopTile from "./components/LavaWorkshopTile";
@@ -281,7 +281,7 @@ function EmberIntro({ onEnter }) {
         className="absolute bottom-8 font-mono text-[10px] tracking-[0.35em] uppercase font-bold"
         style={{ color: "#FFFFFF", textShadow: "0 2px 8px #000000, 0 0 14px #000000" }}
       >
-        Indian Institute of Space Science and Technology · 2026
+        Indian Institute of Space Science and Technology · 2027
       </motion.p>
     </motion.div>
   );
@@ -375,18 +375,47 @@ function HeroSection() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.7, duration: 0.7 }}
-        className="mb-10"
+        className="mb-5"
       >
         <span
-          className="inline-block brand-tagline-cinzel text-sm sm:text-lg tracking-[0.24em] sm:tracking-[0.42em] px-5 sm:px-6 py-2 rounded-full font-bold max-w-full"
-          style={{
-            border: "1.5px solid rgba(255, 165, 110, 0.48)",
-            background: "rgba(8, 6, 5, 0.94)",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.98)",
-          }}
+          className="inline-block brand-tagline-cinzel text-sm sm:text-lg tracking-[0.24em] sm:tracking-[0.42em] font-bold max-w-full"
         >
           {FEST_TAGLINE}
         </span>
+      </motion.div>
+
+      {/* IIST Logo & Institute Name */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.82, duration: 0.7 }}
+        className="flex flex-col items-center gap-2.5 mb-8"
+      >
+        <div
+          className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-white border border-white/40"
+          style={{
+            boxShadow: "0 0 22px rgba(255, 255, 255, 0.22), 0 4px 16px rgba(0, 0, 0, 0.85)",
+          }}
+        >
+          <Image
+            src="/assets/iist-header-logo.jpg"
+            alt={`${FEST_INSTITUTE} Logo`}
+            width={64}
+            height={64}
+            sizes="(max-width: 640px) 56px, 64px"
+            priority
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <p
+          className="font-mono text-[10px] sm:text-xs tracking-[0.22em] sm:tracking-[0.3em] uppercase font-bold text-center px-2"
+          style={{
+            color: "#FFFFFF",
+            textShadow: "0 2px 10px #000000, 0 0 18px #000000, 0 0 4px #000000",
+          }}
+        >
+          {FEST_INSTITUTE}
+        </p>
       </motion.div>
 
       {/* Sub-description */}
@@ -394,13 +423,9 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.95, duration: 0.7 }}
-        className="max-w-md text-sm sm:text-base leading-relaxed mb-14 font-extrabold px-4 py-2.5 rounded-2xl"
+        className="max-w-md text-sm sm:text-base leading-relaxed mb-14 font-extrabold"
         style={{
           color: "#FFFFFF",
-          background: "rgba(8, 6, 5, 0.85)",
-          backdropFilter: "blur(10px)",
-          border: "1px solid rgba(255, 255, 255, 0.12)",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.85)",
           textShadow: "0 2px 10px #000000, 0 0 18px #000000, 0 0 4px #000000",
         }}
       >
@@ -855,7 +880,7 @@ function AboutSection() {
               </h2>
 
               <p className="text-xs sm:text-sm leading-relaxed text-neutral-300">
-                Hosted at the Indian Institute of Space Science and Technology in Valiamala, Thiruvananthapuram, Dhanak brings together college musicians, dancers, theatre ensembles, and artists for four days of competitions, pro-shows, and workshops — celebrating its 2027 edition, <span className="text-white/95">Embers from Ashes</span>.
+                Hosted at the Indian Institute of Space Science and Technology in Valiamala, Thiruvananthapuram, Dhanak brings together college musicians, dancers, theatre ensembles, and artists for four days of competitions, pro-shows, and workshops — celebrating its 2027 edition, <span className="text-white/95">Ember from Ashes</span>.
               </p>
             </div>
 
@@ -922,13 +947,13 @@ function AboutSection() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION: FEATURED EVENTS ON HOME PAGE (Instrumentals, Anime Quiz, Escape Room, Photography)
+// SECTION: FEATURED EVENTS ON HOME PAGE (Solo Singing, Anime Quiz, Painting, Solo Dance)
 // ─────────────────────────────────────────────────────────────────────────────
 const HOME_FEATURED_EVENT_IDS = [
-  "instrumentals",
+  "solo-singing",
   "anime-quiz",
-  "escape-room",
-  "photography",
+  "painting",
+  "solo-dance",
 ];
 
 function SideEventsSection() {

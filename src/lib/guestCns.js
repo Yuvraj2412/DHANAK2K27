@@ -13,7 +13,7 @@ const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I ambiguity
 function generateCode() {
   let code = '';
   for (let i = 0; i < 6; i += 1) code += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-  return `CNS-${code}`;
+  return `DHN-${code}`;
 }
 
 /**
@@ -51,5 +51,5 @@ export async function getRegistrationCnsId(supabase, { userId, existingCode }) {
   const guestCode = await assignGuestCnsId(supabase, { userId });
   if (guestCode) return guestCode;
 
-  throw new Error(`No CNS ID found for registered user ${userId}`);
+  throw new Error(`No DHN-ID found for registered user ${userId}`);
 }

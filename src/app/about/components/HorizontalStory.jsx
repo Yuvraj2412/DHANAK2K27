@@ -30,7 +30,7 @@ const panels = [
     id:4,
     title: "Create\nThe Future",
     text:
-      "The future belongs to those who build it. Conscientia exists to help students become one of them.",
+      "The future belongs to those who build it. Dhanak exists to help students become one of them.",
     image: "/aboutImages/about4.jpg",
   },
 ];

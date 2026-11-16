@@ -110,7 +110,7 @@ export default function QrScanner({ onScan, onClose, title = 'Scan QR Code' }) {
         </p>
       )}
       {!error && (
-        <p className="mt-4 text-xs text-white/40">Point the camera at a Conscientia QR code.</p>
+        <p className="mt-4 text-xs text-white/40">Point the camera at a Dhanak QR code.</p>
       )}
 
       <button

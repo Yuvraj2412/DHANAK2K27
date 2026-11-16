@@ -166,7 +166,7 @@ export async function renderCertificateCanvas(canvas, options = {}) {
     participantName = 'Participant Name',
     college = '',
     workshopTitle = 'Workshop Name',
-    workshopDate = 'March 2026',
+    workshopDate = 'March 2027',
     issueDate = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
     certificateId = 'CERT-DHN-WS-0001',
     certificateType = 'Certificate of Participation',
@@ -445,9 +445,11 @@ export async function renderCertificateCanvas(canvas, options = {}) {
   ctx.fillText(sig2.title, rightSigX, bottomSectionY + 94);
 
   // 12. Dynamic QR Code (Scannable verification badge)
+  const origin =
+    typeof window !== 'undefined' ? window.location.origin : 'https://dhanak.iist.ac.in';
   const qrTarget =
     verificationUrl ||
-    `https://conscientia.co.in/certificate/verify?id=${encodeURIComponent(
+    `${origin}/certificate/verify?id=${encodeURIComponent(
       certificateId
     )}&name=${encodeURIComponent(participantName)}&ws=${encodeURIComponent(workshopTitle)}`;
 

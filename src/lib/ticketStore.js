@@ -8,12 +8,15 @@ function parseCost(raw) {
   return Number.isFinite(n) ? n : null;
 }
 
+const DEFAULT_TICKETS = {
+  'merch-tshirt': { ticketId: 3183, cost: 799 },
+  delivery: { ticketId: 3179, cost: 50 },
+};
+
 async function loadAll() {
   if (cache) return cache;
   if (!isSupabaseConfigured()) {
-    cache = {
-      'merch-tshirt': { ticketId: 3999, cost: 499 },
-    };
+    cache = { ...DEFAULT_TICKETS };
     return cache;
   }
 
@@ -21,14 +24,17 @@ async function loadAll() {
     const { data, error } = await supabase.from('tickets').select('id, ticket_id, cost');
     if (error && Object.keys(error).length > 0) {
       console.warn('[ticketStore] loadAll warning:', error.message || error);
-      return {};
+      return { ...DEFAULT_TICKETS };
     }
-    cache = Object.fromEntries(
-      (data || []).map((row) => [row.id, { ticketId: row.ticket_id, cost: parseCost(row.cost) }])
-    );
+    cache = {
+      ...DEFAULT_TICKETS,
+      ...Object.fromEntries(
+        (data || []).map((row) => [row.id, { ticketId: row.ticket_id, cost: parseCost(row.cost) }])
+      ),
+    };
     return cache;
   } catch (err) {
-    return {};
+    return { ...DEFAULT_TICKETS };
   }
 }
 

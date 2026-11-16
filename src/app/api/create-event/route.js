@@ -8,7 +8,7 @@ export async function POST(req) {
       name: "Online Workshop",
       start_date: "2026-05-10 10:00:00",
       end_date: "2026-05-10 17:00:00",
-      short_description: "Conscientia 2026 Online Workshops",
+      short_description: "Dhanak 2027 Online Workshops",
       is_online: true,
       is_public: true,
       is_published: true,
@@ -17,7 +17,7 @@ export async function POST(req) {
       address: {
         place_id: "ChIJAQAAUP1CpjsRbNo7ldt3ir4"
       },
-      tags: ["workshops", "technical", "online", "conscientia"]
+      tags: ["workshops", "technical", "online", "dhanak"]
     };
 
     const response = await fetch('https://api.tiqr.events/organiser/event/', {

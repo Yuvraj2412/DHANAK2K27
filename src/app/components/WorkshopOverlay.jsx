@@ -86,7 +86,7 @@ export default function WorkshopOverlay() {
             color: 'rgba(255, 107, 0, 0.7)',
             textTransform: 'uppercase',
           }}>
-            CONSCIENTIA
+            DHANAK
           </span>
         </div>
 
@@ -143,7 +143,7 @@ export default function WorkshopOverlay() {
             margin: 0,
             textShadow: '0 0 80px rgba(255, 107, 0, 0.12)',
           }}>
-            TIME<span style={{ color: 'rgba(255, 107, 0, 0.85)', fontWeight: 300 }}> FALL</span>
+            EMBER<span style={{ color: 'rgba(255, 107, 0, 0.85)', fontWeight: 300 }}> FROM ASHES</span>
           </h1>
           {/* Underline glow */}
           <div style={{

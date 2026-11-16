@@ -3,14 +3,14 @@ import { SiGooglemaps } from "react-icons/si";
 import AccommodationBooking from './AccommodationBooking';
 
 export const metadata = {
-  title: 'Accommodation | Conscientia IIST',
-  description: 'Find accommodation info for Conscientia — the annual technical festival at IIST.',
+  title: 'Accommodation | Dhanak 2027 · IIST',
+  description: 'Find accommodation info for Dhanak 2027 — the annual cultural festival at IIST.',
 };
 
 const faqs = [
   {
-    q: 'Who is eligible for accommodation during Conscientia 2026?',
-    a: 'Accommodation is available only for registered participants of Conscientia 2026 who opt for it during the official registration process on the fest website. Participants below the age of 18 will be provided accommodation only if accompanied by a faculty member or adult guardian. A consent mail & letter may also be required during check-in.',
+    q: 'Who is eligible for accommodation during Dhanak 2027?',
+    a: 'Accommodation is available only for registered participants of Dhanak 2027 who opt for it during the official registration process on the fest website. Participants below the age of 18 will be provided accommodation only if accompanied by a faculty member or adult guardian. A consent mail & letter may also be required during check-in.',
   },
   {
     q: 'How do I confirm my accommodation booking?',
@@ -30,11 +30,11 @@ const faqs = [
   },
   {
     q: 'What are the check-in and check-out timings?',
-    a: 'Check-in: from October 29th (3pm onwards). Check-out: by 9pm on November 1st. Late arrivals must inform the hospitality team in advance.',
+    a: 'Check-in: from 18th March (3pm onwards). Check-out: by 9pm on 21st March. Late arrivals must inform the hospitality team in advance.',
   },
   {
     q: 'What does one "night" of accommodation mean?',
-    a: 'A night runs from 4:00 PM on the previous day to 4:00 PM on the next day. So booking the night of October 30th, for example, covers your stay from 4:00 PM on the 30th to 4:00 PM on the 31st.',
+    a: 'A night runs from 4:00 PM on the previous day to 4:00 PM on the next day. So booking the night of 19th March, for example, covers your stay from 4:00 PM on the 19th to 4:00 PM on the 20th.',
   },
   {
     q: 'How is the security deposit handled?',
@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: 'Will food be provided with accommodation?',
-    a: 'Food is not included with accommodation. Mess coupons can be purchased at the Hospitality Desk, and will be valid only for the 29th, 30th, and 31st during the fest. Food stalls will also be available across the venue.',
+    a: 'Food is not included with accommodation. Mess coupons can be purchased at the Hospitality Desk, and will be valid only for 18, 19, 20, 21 March during the fest. Food stalls will also be available across the venue.',
   },
   {
     q: 'Can I request a specific room or roommate?',
@@ -50,11 +50,11 @@ const faqs = [
   },
   {
     q: 'Can I extend my stay beyond fest dates?',
-    a: 'Accommodation is only available from 29th October to 1st November. Extensions are not permitted.',
+    a: 'Accommodation is only available on 18, 19, 20, 21 March. Extensions are not permitted.',
   },
   {
     q: 'Who should I contact in case of issues?',
-    a: 'The Hospitality Helpdesk operates round the clock during the fest, near the front gate and hostel gate. Phone: +91 9492934422 (Neehar), +91 7075712926 (Geethika), +91 9778430881 (Fuad). Email: hospitalityconscientia2k26@gmail.com.',
+    a: 'The Hospitality Helpdesk operates round the clock during the fest, near the front gate and hostel gate. For any accommodation queries, reach out to Ananya Bhatt (+91 70382 90052) or Sanandhu Santosh (+91 88482 91588) on our Contact Us page.',
   },
 ];
 
@@ -62,8 +62,8 @@ const rulesSections = [
   {
     title: 'Eligibility & Registration',
     points: [
-      'Accommodation is strictly available only for registered participants of Conscientia 2026.',
-      'Accommodation must be booked through the official Conscientia website during the registration process.',
+      'Accommodation is strictly available only for registered participants of Dhanak 2027.',
+      'Accommodation must be booked through the official Dhanak website during the registration process.',
       'Accommodation charges must be paid online at the time of registration.',
       'Accommodation will be confirmed only after successful payment.',
       'During check-in, participants must carry: valid college ID card, Aadhaar card (compulsory), and digital or printed accommodation confirmation.',
@@ -81,7 +81,7 @@ const rulesSections = [
   {
     title: 'Accommodation Duration',
     points: [
-      'Accommodation will be available from October 29th to November 1st.',
+      'Accommodation will be available on 18, 19, 20, 21 March.',
       'Participants must strictly adhere to the allotted check-in and check-out timings.',
     ],
   },
@@ -163,14 +163,14 @@ export default function AccommodationPage() {
   return (
     <SimplePageShell
       title="Accommodation"
-      subtitle="Find your berth for the nights you'll spend at Time Fall."
+      subtitle="Find your berth for the nights you'll spend at Dhanak 2027 — Ember from Ashes."
     >
       <div className="mx-auto max-w-4xl px-5 pb-16 pt-8 text-slate-100">
         <p className="section-eyebrow mb-2">
           Accommodation
         </p>
         <p className="mb-3 max-w-[60ch] text-base leading-relaxed text-slate-400">
-          Conscientia runs across 3 days, and every participant, speaker, needs somewhere to land in between. Accommodation is arranged in hostel blocks on the IIST campus, a walk away from all event venues.
+          Dhanak runs across 4 days, and every participant and performer needs somewhere to land in between. Accommodation is arranged in hostel blocks on the IIST campus, a walk away from all event venues.
         </p>
         <p className="mb-10 max-w-[60ch] text-sm leading-relaxed text-slate-500">
           A room (on-campus or off-campus, based on availability) will be provided along with bedding, drinking water, a hospitality desk, and luggage storage for early arrivals and late departures. Food is not included — see the FAQs and Rules &amp; Regulations below for the full details.
@@ -181,7 +181,7 @@ export default function AccommodationPage() {
         <dl className="mb-12 grid grid-cols-1 gap-4 border-y border-white/[0.08] py-5 sm:grid-cols-3">
           <div>
             <dt className="section-eyebrow mb-1">Dates</dt>
-            <dd className="text-sm">October 29, October 30, October 31, November 1</dd>
+            <dd className="text-sm">18, 19, 20, 21 March</dd>
           </div>
           <div>
             <dt className="section-eyebrow mb-1">Eligibility</dt>
@@ -222,17 +222,17 @@ export default function AccommodationPage() {
   <h1 className='text-2xl flex items-center'>Closest to Event Venues:   <SiGooglemaps/> <a className="underline font-bold text-[#6E2E63]" href="https://maps.app.goo.gl/uQpvBDeoWH45nAHJA">IIST Frontgate</a></h1>
 </section>
 
-        <section className="mb-12">
-          <h2 className="section-eyebrow mb-5">
+        <section className="glass-card mb-12 rounded-xl p-5 sm:p-6">
+          <h2 className="section-eyebrow mb-4">
             Frequently asked
           </h2>
           <div>
             {faqs.map((f) => (
-              <details key={f.q} className="border-b border-white/[0.08] py-4">
-                <summary className="cursor-pointer font-semibold outline-offset-4">
+              <details key={f.q} className="border-b border-white/[0.08] py-4 last:border-b-0">
+                <summary className="cursor-pointer font-semibold text-white outline-offset-4 hover:text-amber-300 transition-colors">
                   {f.q}
                 </summary>
-                <p className="mt-2 text-sm text-slate-400">{f.a}</p>
+                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{f.a}</p>
               </details>
             ))}
           </div>

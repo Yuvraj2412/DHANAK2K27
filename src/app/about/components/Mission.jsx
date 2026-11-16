@@ -109,7 +109,7 @@ export default function Mission() {
 
           <p className="mission-description">
 
-            Conscientia is IIST&apos;s student-run fest — a launchpad where
+            Dhanak is IIST&apos;s student-run cultural fest — a launchpad where
             workshops, hands-on events and open competitions turn
             classroom curiosity into research, collaboration,
             engineering and real-world impact.

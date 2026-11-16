@@ -13,6 +13,10 @@ import { MERCH_ITEMS, MERCH_REVEAL_VIDEO, ticketFor } from './merchData';
 import { getCostMap } from '@/lib/ticketStore';
 import { showCartToast } from '@/lib/cartToast';
 import useBodyScrollLock from '../hooks/useBodyScrollLock';
+import { isProfileComplete, promptProfileCompletion } from '@/lib/profileCompletion';
+
+const DEFAULT_MERCH_PRICE = 799;
+const DEFAULT_DELIVERY_FEE = 50; // 799 + 50 = 849 if shipping out
 
 function QtyStepper({ qty, onChange, label }) {
   const [flash, setFlash] = useState(false);
@@ -234,7 +238,7 @@ function MerchDialog({ item, initialSize, profile, deliveryFee, onClose, onConfi
                 }}
                 className={wantsDelivery === true ? 'btn-primary text-[10px]' : 'btn-secondary text-[10px]'}
               >
-                <Truck size={14} /> Yes, deliver (extra charges apply)
+                <Truck size={14} /> Yes, deliver (₹{DEFAULT_MERCH_PRICE + (deliveryFee || DEFAULT_DELIVERY_FEE)} if shipping out)
               </button>
               <button
                 type="button"
@@ -319,7 +323,7 @@ function MerchDialog({ item, initialSize, profile, deliveryFee, onClose, onConfi
   );
 }
 
-function MerchCard({ item, price, onSelect }) {
+function MerchCard({ item, price, shippingPrice, onSelect }) {
   const { hasItem } = useCart();
   const [size, setSize] = useState(item.sizes[0]);
   const [zoomImage, setZoomImage] = useState(null);
@@ -347,7 +351,10 @@ function MerchCard({ item, price, onSelect }) {
       </h3>
       <p className="text-xs text-slate-200 mt-0.5">{item.subtitle}</p>
       <p className="mt-1.5 text-sm font-semibold" style={{ color: item.accentColor }}>
-        &#8377;{price}
+        &#8377;{price}{' '}
+        <span className="text-xs font-normal text-slate-300">
+          (&#8377;{shippingPrice} if shipping out)
+        </span>
       </p>
       {item.expectedArrival && (
         <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-2.5 py-1 text-[10px] font-mono tracking-wider text-orange-400 self-start">
@@ -434,11 +441,17 @@ export default function MerchSection() {
     };
   }, []);
 
-  const deliveryFee = prices.delivery || 0;
+  const deliveryFee = prices.delivery || DEFAULT_DELIVERY_FEE;
 
   const handleSelect = (item, size) => {
     if (!user) {
       router.push('/login?redirect=/merch');
+      return;
+    }
+    if (!isProfileComplete(profile)) {
+      showCartToast('Please complete your profile before ordering');
+      promptProfileCompletion();
+      router.push('/profile');
       return;
     }
     setActiveItem(item);
@@ -447,7 +460,7 @@ export default function MerchSection() {
 
   const handleConfirm = async ({ qty, size, delivery }) => {
     const item = activeItem;
-    const itemPrice = prices[item.id] || 0;
+    const itemPrice = prices[item.id] || DEFAULT_MERCH_PRICE;
     const cartKey = `merch:${item.id}:${size}`;
     addItem({
       key: cartKey,
@@ -493,13 +506,22 @@ export default function MerchSection() {
     <section className="mb-14">
       <p className="section-eyebrow mb-2">Merch</p>
       <h2 className="section-heading mb-6 text-2xl sm:text-3xl">
-        Gear up for Dhanak 2026
+        Gear up for DHANAK 2027
       </h2>
 
       <div className="mx-auto grid max-w-xl grid-cols-1 gap-6">
-        {MERCH_ITEMS.map((item) => (
-          <MerchCard key={item.id} item={item} price={prices[item.id] || 0} onSelect={handleSelect} />
-        ))}
+        {MERCH_ITEMS.map((item) => {
+          const itemPrice = prices[item.id] || DEFAULT_MERCH_PRICE;
+          return (
+            <MerchCard
+              key={item.id}
+              item={item}
+              price={itemPrice}
+              shippingPrice={itemPrice + deliveryFee}
+              onSelect={handleSelect}
+            />
+          );
+        })}
       </div>
 
       {MERCH_REVEAL_VIDEO ? (

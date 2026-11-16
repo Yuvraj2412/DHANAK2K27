@@ -78,5 +78,5 @@ export function downloadRegistrationsExcel(rows, options = {}) {
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Registrations');
 
   const date = new Date().toISOString().slice(0, 10);
-  XLSX.writeFile(workbook, `conscientia-registrations-${date}.xlsx`);
+  XLSX.writeFile(workbook, `dhanak-registrations-${date}.xlsx`);
 }

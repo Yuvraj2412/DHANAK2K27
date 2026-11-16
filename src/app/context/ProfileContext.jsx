@@ -154,37 +154,22 @@ export function ProfileProvider({ children }) {
       }
 
       try {
-        if (!profile) {
-          const { data, error } = await supabase
-            .from('profiles')
-            .insert({
+        const { data, error } = await supabase
+          .from('profiles')
+          .upsert(
+            {
               user_id: user.id,
               unique_code: updated.unique_code || generateUniqueCode(),
               email: user.email?.toLowerCase() || null,
               ...fields,
-            })
-            .select()
-            .maybeSingle();
-          if (error) {
-            console.warn('[ProfileContext] insert failed, cached locally', error);
-            return { data: updated };
-          }
-          if (data) setProfile(data);
-          return { data: data || updated };
-        }
-
-        const { data, error } = await supabase
-          .from('profiles')
-          .update({
-            ...fields,
-            email: user.email?.toLowerCase() || null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('user_id', user.id)
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id' }
+          )
           .select()
           .maybeSingle();
         if (error) {
-          console.warn('[ProfileContext] update failed, cached locally', error);
+          console.warn('[ProfileContext] upsert failed, cached locally', error);
           return { data: updated };
         }
         if (data) setProfile(data);

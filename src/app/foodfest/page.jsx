@@ -234,7 +234,7 @@ export default function FoodfestPage() {
 
       <div className="relative z-10 mx-auto max-w-5xl px-5 pt-16">
         <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-orange-400/90 mb-3">
-          Conscientia 2026
+          Dhanak 2027
         </p>
         <h1 className="text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-2 bg-gradient-to-br from-white via-orange-100 to-orange-300 bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(255,107,53,0.25)]">
           Food Fest

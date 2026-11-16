@@ -33,7 +33,7 @@ const sections = [
       'When you sign in, complete your attendee profile, or register for any festival activity, we collect only the information strictly necessary for festival administration and campus security verification:',
     ],
     bullets: [
-      'Identity & Profile Information: Full legal name, gender, city, and unique attendee identification code (DHN-ID / CNS-ID).',
+      'Identity & Profile Information: Full legal name, gender, city, and unique attendee identification code (DHN-ID).',
       'Contact Information: Email address (verified via Google OAuth or One-Time Password) and 10-digit mobile phone number for communication, ticket delivery, and emergency coordination.',
       'Academic & Campus Security Verification Details: College/Institution name, College Roll/ID Number, and 12-digit Government Identity / Aadhaar number. Because IIST functions under the Department of Space, Government of India, valid government and institutional identification is mandatory for security clearance and physical entry onto the IIST Valiamala campus.',
       'Event & Team Registration Records: Selected workshops, cultural events, team rosters (leader and teammate DHN-IDs), accommodation dates, meal preferences, and merchandise sizes.',

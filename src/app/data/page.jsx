@@ -120,7 +120,7 @@ export default function DataPage() {
   const exportParticipants = () => {
     const rows = filteredParticipants.map((p) => ({
       Name: p.name || "",
-      "CNS-id": p.unique_code || "",
+      "DHN-ID": p.unique_code || "",
       Email: p.email || "",
       Phone: p.phone || "",
       "Aadhaar Number": p.aadhaar_number || "",
@@ -333,7 +333,7 @@ export default function DataPage() {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search name, email, phone, CNS-id…"
+                        placeholder="Search name, email, phone, DHN-ID…"
                         style={{
                           width: "100%",
                           padding: "0.65rem 0.9rem 0.65rem 2.3rem",

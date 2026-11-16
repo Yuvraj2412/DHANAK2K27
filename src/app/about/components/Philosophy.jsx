@@ -109,7 +109,7 @@ export default function Philosophy() {
           <ChunkyImage
             src="/aboutImages/team.jpg"
             className="team-image"
-            alt="Conscientia Team"
+            alt="Dhanak Team"
             targetWidth={1200}
           />
         </div>

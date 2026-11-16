@@ -19,6 +19,7 @@ import MealDaySelectionModal from '../components/MealDaySelectionModal';
 import useBodyScrollLock from '../hooks/useBodyScrollLock';
 import { DAY_PASSES } from '../data/festivalDays';
 import { FEST_NAME, FEST_YEAR } from '@/lib/festConfig';
+import { isProfileComplete } from '@/lib/profileCompletion';
 
 async function authedFetch(url, options = {}) {
   const { data } = await supabase.auth.getSession();
@@ -150,7 +151,10 @@ export default function ProfilePage() {
       gender: profile.gender || '',
       address: profile.address || '',
     });
-  }, [profile]);
+    if (!profileLoading && !isProfileComplete(profile)) {
+      setEditing(true);
+    }
+  }, [profile, profileLoading]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -658,7 +662,7 @@ function QrCodeModal({ code, onClose }) {
         >
           <X size={16} />
         </button>
-        <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-orange-400/90">Your CNS-id</p>
+        <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-orange-400/90">Your DHN-ID</p>
         {dataUrl ? (
           <motion.img
             initial={{ scale: 0.8, opacity: 0 }}
@@ -714,7 +718,7 @@ function ScanResultModal({ result, onRescan, onClose }) {
             <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.3em] text-orange-400/90">Attendee</p>
             <p className="mb-3 text-lg font-bold text-white">{result.data.name || 'Unnamed'}</p>
             <div className="mb-4 space-y-1.5 text-xs text-white/60">
-              <p>CNS-id: <span className="text-amber-300">{result.data.unique_code}</span></p>
+              <p>DHN-ID: <span className="text-amber-300">{result.data.unique_code}</span></p>
               <p>Phone: {result.data.phone || '—'}</p>
               <p>College: {result.data.college || '—'}</p>
               <p>City: {result.data.city || '—'}</p>
@@ -950,7 +954,7 @@ function TeamPanel({ item, profile }) {
             type="text"
             value={draft}
             onChange={(e) => setDraft(e.target.value.toUpperCase())}
-            placeholder={`Teammate ${roster.length + 1} CNS-id (e.g. CNS-AB12CD)`}
+            placeholder={`Teammate ${roster.length + 1} DHN-ID (e.g. DHN-123456)`}
             className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-xs text-white outline-none focus:border-orange-500/60"
           />
           <button

@@ -71,7 +71,7 @@ export default function Footer() {
                   Dhanak<span className="text-[#FF6B00]">.</span>
                 </span>
                 <p className="brand-tagline-cinzel text-[11px] font-bold tracking-[0.22em]">
-                  Embers from Ashes · IIST Cultural Fest
+                  Ember from Ashes · IIST Cultural Fest
                 </p>
               </div>
               <p className="text-sm leading-relaxed text-white/55">

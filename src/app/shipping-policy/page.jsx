@@ -23,7 +23,7 @@ const sections = [
     title: 'Digital Passes, Workshop & Competition Registrations (Instant Delivery)',
     bullets: [
       'Immediate Digital Fulfilment: All workshop registrations, competition tickets, pronite passes, and accommodation confirmations are delivered digitally immediately (0 hours) upon successful payment verification via Razorpay.',
-      'Where to Access Your Passes: Once your payment is verified, your registered items, unique Attendee ID (DHN-ID / CNS-ID), and digital QR pass are immediately visible in your Profile Dashboard (/profile) on our website.',
+      'Where to Access Your Passes: Once your payment is verified, your registered items, unique Attendee ID (DHN-ID), and digital QR pass are immediately visible in your Profile Dashboard (/profile) on our website.',
       'Teammate Pass Fulfilment: When a Team Leader adds verified teammates to a group competition roster, the competition pass is automatically synced to each teammate’s Profile Dashboard immediately.',
       'Zero Shipping Cost for Digital Items: No shipping or handling fee applies to digital event passes, online workshops, or campus accommodation bookings.',
     ],

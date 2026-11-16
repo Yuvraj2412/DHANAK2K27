@@ -2,8 +2,8 @@ import SimplePageShell from '../components/SimplePageShell';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Pronites | Dhanak 2026',
-  description: 'Star celebrity nights, band clashes, and live EDM at Dhanak 2026.',
+  title: 'Pronites | Dhanak 2027',
+  description: 'Star celebrity nights, band clashes, and live concerts at Dhanak 2027.',
 };
 
 const pronites = [

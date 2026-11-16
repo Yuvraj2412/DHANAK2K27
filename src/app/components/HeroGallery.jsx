@@ -326,8 +326,8 @@ export default function HeroGallery() {
             marginBottom: "0.6rem",
           }}
         >
-          <span className="glitch-text" data-text="Conscientia 2025 Showcase">
-            Conscientia 2025 Showcase
+          <span className="glitch-text" data-text="Dhanak 2027 Showcase">
+            Dhanak 2027 Showcase
           </span>
         </div>
 

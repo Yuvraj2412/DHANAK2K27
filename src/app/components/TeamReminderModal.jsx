@@ -34,7 +34,7 @@ export default function TeamReminderModal({ open, onClose }) {
               Add Your Teammates
             </h2>
             <p className="mb-6 text-sm text-white/60">
-              This event/workshop needs your teammates&apos; CNS-ids before your team is complete. Head over to
+              This event/workshop needs your teammates&apos; DHN-IDs before your team is complete. Head over to
               your profile page to add them.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">

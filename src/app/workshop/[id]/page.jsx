@@ -27,6 +27,7 @@ import {
 import FetchIntro from "@/app/components/FetchIntro";
 import ChunkyImage from "@/app/components/ChunkyImage";
 import { getCatalog, getCatalogItem } from "@/lib/catalogStore";
+import { isProfileComplete, promptProfileCompletion } from "@/lib/profileCompletion";
 import useSound from "@/app/hooks/useSound";
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
@@ -169,6 +170,16 @@ export default function WorkshopDetailPage() {
   const handleAddToCart = () => {
     if (!card || inCart || isClosed || isRegistered) return;
     playClick();
+    if (!user) {
+      router.push(`/login?redirect=${encodeURIComponent(`/workshop/${card.id}`)}`);
+      return;
+    }
+    if (!isProfileComplete(profile)) {
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
+      router.push("/profile");
+      return;
+    }
     addItem(toCartItem());
     showCartToast("Workshop added to cart");
   };
@@ -180,13 +191,9 @@ export default function WorkshopDetailPage() {
       router.push(`/login?redirect=${encodeURIComponent(`/workshop/${card.id}`)}`);
       return;
     }
-    if (
-      !profile?.name ||
-      !profile?.phone ||
-      !profile?.college ||
-      !profile?.college_id ||
-      !profile?.aadhaar_number
-    ) {
+    if (!isProfileComplete(profile)) {
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
       router.push("/profile");
       return;
     }
@@ -205,7 +212,7 @@ export default function WorkshopDetailPage() {
         <div className="relative z-10 text-center max-w-md">
           <h1 className="text-3xl font-bold mb-3">Workshop Not Found</h1>
           <p className="text-white/65 mb-6">
-            The requested workshop could not be located in the Dhanak 2026 catalog.
+            The requested workshop could not be located in the Dhanak 2027 catalog.
           </p>
           <Link
             href="/workshop"
@@ -226,7 +233,7 @@ export default function WorkshopDetailPage() {
     { label: "Domain", value: card.section || card.type || "Technical Workshop" },
     { label: "Level / Type", value: card.level || card.type || "Basic" },
     { label: "Format", value: card.format || "Online Live Interactive Session" },
-    { label: "Date", value: card.eventDate || "Dhanak 2026" },
+    { label: "Date", value: card.eventDate || "Dhanak 2027" },
     { label: "Schedule & Timing", value: card.timing || "10:00 AM – 05:00 PM IST" },
     { label: "Venue / Platform", value: card.venue || "Online Live Session" },
     { label: "Registration Fee", value: card.price || "₹299" },
@@ -239,7 +246,7 @@ export default function WorkshopDetailPage() {
   const defaultWorkshopFaqs = [
     {
       q: "How do I register for this workshop?",
-      a: "Click 'Add to Cart' or 'Register Now' on the sidebar, proceed to checkout, and complete your registration. You will receive an instant confirmation email with your booking receipt and CNS ID.",
+      a: "Click 'Add to Cart' or 'Register Now' on the sidebar, proceed to checkout, and complete your registration. You will receive an instant confirmation email with your booking receipt and DHN-ID.",
     },
     {
       q: "Will I receive an official certificate?",
@@ -273,7 +280,7 @@ export default function WorkshopDetailPage() {
     },
     {
       q: "Who should I contact if I have further questions?",
-      a: "Feel free to reach out directly to the workshop student coordinators listed below or email conscientiateamiist@gmail.com for any questions or support.",
+      a: "Feel free to reach out directly to the workshop student coordinators listed below or contact us via our Contact Us page for any questions or support.",
     },
   ];
 
@@ -307,7 +314,7 @@ export default function WorkshopDetailPage() {
           </Link>
 
           <span className="text-xs font-mono uppercase tracking-widest text-amber-300/65 hidden sm:inline">
-            Dhanak 2026 · Masterclass Series
+            Dhanak 2027 · Masterclass Series
           </span>
         </div>
 
@@ -392,7 +399,7 @@ export default function WorkshopDetailPage() {
                       Schedule & Timings
                     </p>
                     <p className="font-semibold text-white break-words mt-0.5">
-                      {card.timing || card.eventDate || "Dhanak 2026"}
+                      {card.timing || card.eventDate || "Dhanak 2027"}
                     </p>
                   </div>
                 </div>
@@ -783,7 +790,7 @@ export default function WorkshopDetailPage() {
                         Date & Timings
                       </p>
                       <p className="text-white font-semibold mt-0.5 break-words">
-                        {card.timing || card.eventDate || "Dhanak 2026"}
+                        {card.timing || card.eventDate || "Dhanak 2027"}
                       </p>
                     </div>
                   </div>

@@ -25,7 +25,7 @@ const DIMENSIONS = [
   },
   {
     index: '04',
-    title: 'Embers from Ashes',
+    title: 'Ember from Ashes',
     tag: '2027 Edition',
     body: 'The 2027 edition takes its name from creative persistence — honouring the continuity of student culture built from scratch every year by cohorts who leave their own mark on the campus stage.',
   },
@@ -108,7 +108,7 @@ export default function AboutConceptStory() {
                 2027
               </p>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-300/90">
-                Embers from Ashes
+                Ember from Ashes
               </p>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function AboutConceptStory() {
                 DHANAK
               </span>
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-300">
-                Embers from Ashes
+                Ember from Ashes
               </span>
             </div>
           </div>

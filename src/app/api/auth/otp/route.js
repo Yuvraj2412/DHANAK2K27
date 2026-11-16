@@ -56,7 +56,7 @@ async function dispatchRealSms(phone10, otp) {
         },
         body: JSON.stringify({
           route: 'q',
-          message: `Your Dhanak 2026 (IIST) verification OTP is ${otp}. Valid for 5 minutes. Do not share this code.`,
+          message: `Your Dhanak 2027 (IIST) verification OTP is ${otp}. Valid for 5 minutes. Do not share this code.`,
           language: 'english',
           flash: 0,
           numbers: phone10,
@@ -80,7 +80,7 @@ async function dispatchRealSms(phone10, otp) {
       const params = new URLSearchParams({
         To: `+91${phone10}`,
         From: twilioFrom,
-        Body: `Your Dhanak 2026 (IIST) verification OTP is ${otp}. Valid for 5 minutes.`,
+        Body: `Your Dhanak 2027 (IIST) verification OTP is ${otp}. Valid for 5 minutes.`,
       });
       const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString('base64');
       const res = await fetch(

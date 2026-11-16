@@ -146,7 +146,7 @@ export default function TeamRosterBuilder({
     if (!rawCode) {
       setErrorMap((prev) => ({
         ...prev,
-        [eventId]: 'Please enter a valid DHN-ID or CNS-ID (e.g. DHN-123456).',
+        [eventId]: 'Please enter a valid DHN-ID (e.g. DHN-123456).',
       }));
       return;
     }

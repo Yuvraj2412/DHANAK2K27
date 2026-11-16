@@ -56,7 +56,7 @@ const Nav = () => {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 whitespace-nowrap pointer-events-none">
           <Link href="/" className="cursor-target pointer-events-auto relative flex items-center no-underline px-2 py-1">
             <DecryptedText
-              text="CONSCIENTIA 2k26"
+              text="DHANAK 2k27"
               animateOn="view"
               revealDirection="center"
               sequential={true}
@@ -229,7 +229,7 @@ const Nav = () => {
                 transition={{ delay: 0.5 }}
                 className="font-syncopate text-[10px] md:text-xs tracking-[0.4em] text-white/40 uppercase mb-20"
               >
-                CONSCIENTIA SINCE 2026
+                DHANAK · EMBER FROM ASHES
               </motion.p>
 
               {/* Footer Actions */}

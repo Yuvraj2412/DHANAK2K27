@@ -95,7 +95,7 @@ export default function CTA() {
       <div className="cta-container">
 
         <p className="cta-tag">
-          JOIN CONSCIENTIA
+          JOIN DHANAK
         </p>
 
         <h2 className="cta-title">

@@ -11,6 +11,7 @@ import usePaymentReminder from '../hooks/usePaymentReminder';
 import PrePaymentReminderModal from '../components/PrePaymentReminderModal';
 import TeamRosterBuilder from '../components/TeamRosterBuilder';
 import { startRazorpayCheckout } from '@/lib/checkout';
+import { isProfileComplete as checkProfileComplete, promptProfileCompletion } from '@/lib/profileCompletion';
 
 export default function CartPage() {
   const { user, loading } = useAuth();
@@ -53,22 +54,15 @@ export default function CartPage() {
       key: 'dhanak-phoenix-hoodie',
       kind: 'merch',
       title: 'Official Dhanak Phoenix Ember Hoodie (L)',
-      subtitle: 'Limited Edition 2026 IIST Fest Merch',
-      priceLabel: '₹399',
-      unitPrice: 399,
+      subtitle: 'Limited Edition 2027 IIST Fest Merch',
+      priceLabel: '₹799',
+      unitPrice: 799,
       qty: 1,
       accentColor: '#FFA500',
     });
   };
 
-  const isProfileComplete = Boolean(
-    profile?.name &&
-    profile?.phone &&
-    profile?.college &&
-    profile?.college_id &&
-    profile?.aadhaar_number &&
-    profile?.gender
-  );
+  const isProfileComplete = checkProfileComplete(profile);
 
   const runCheckout = async () => {
     setError('');
@@ -86,8 +80,12 @@ export default function CartPage() {
       setError('Full name is required.');
       return;
     }
-    if (!attendee.phone || attendee.phone.length < 10) {
+    if (!attendee.phone || attendee.phone.replace(/\D/g, '').length < 10) {
       setError('A valid 10-digit mobile number is required.');
+      return;
+    }
+    if (!attendee.college) {
+      setError('College / Institution name is required.');
       return;
     }
     if (!attendee.college_id || !attendee.aadhaar_number) {
@@ -348,6 +346,7 @@ export default function CartPage() {
                       className="rounded-lg border border-white/15 bg-black/40 px-4 py-2.5 text-sm outline-none focus:border-orange-500"
                     />
                     <input
+                      required
                       placeholder="College / Institution"
                       value={form.college}
                       onChange={(e) => setForm({ ...form, college: e.target.value })}

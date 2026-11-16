@@ -161,12 +161,12 @@ export default function TeamNudgeWidget() {
                   className="mb-3 overflow-hidden rounded-lg border border-orange-500/20 bg-orange-500/[0.06] p-3 text-[11px] leading-relaxed text-white/60"
                 >
                   <p className="mb-1.5">
-                    <span className="font-bold text-amber-300">What&apos;s a CNS-id?</span> It&apos;s your unique
-                    Conscientia registration code, shown on your profile page after you sign up.
+                    <span className="font-bold text-amber-300">What&apos;s a DHN-ID?</span> It&apos;s your unique
+                    Dhanak registration code, shown on your profile page after you sign up.
                   </p>
                   <p>
                     <span className="font-bold text-amber-300">Adding teammates:</span> ask each teammate for
-                    their own CNS-id, then go to your profile page and enter their codes under this
+                    their own DHN-ID, then go to your profile page and enter their codes under this
                     event/workshop&apos;s team section to complete your roster.
                   </p>
                 </motion.div>

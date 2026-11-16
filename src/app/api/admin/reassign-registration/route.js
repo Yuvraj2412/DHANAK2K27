@@ -45,10 +45,10 @@ export async function POST(req) {
     const toProfile = (profiles || []).find((p) => p.unique_code === toCode);
 
     if (!fromProfile) {
-      return NextResponse.json({ success: false, message: `No account found for CNS-id ${fromCode}.` }, { status: 400 });
+      return NextResponse.json({ success: false, message: `No account found for DHN-ID ${fromCode}.` }, { status: 400 });
     }
     if (!toProfile) {
-      return NextResponse.json({ success: false, message: `No account found for CNS-id ${toCode}.` }, { status: 400 });
+      return NextResponse.json({ success: false, message: `No account found for DHN-ID ${toCode}.` }, { status: 400 });
     }
 
     const { data: fromRegistration } = await supabase

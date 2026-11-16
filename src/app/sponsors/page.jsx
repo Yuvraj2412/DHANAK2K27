@@ -1,9 +1,9 @@
 import SponsorsSection from '../components/SponsorsSection';
 
 export const metadata = {
-  title: 'Sponsors & Partners | Dhanak 2026',
+  title: 'Sponsors & Partners | Dhanak 2027',
   description:
-    'Official sponsors, industry partners, and collaborative supporters of Dhanak 2026 at IIST Valiamala.',
+    'Official sponsors, industry partners, and collaborative supporters of Dhanak 2027 at IIST Valiamala.',
 };
 
 export default function SponsorsPage() {

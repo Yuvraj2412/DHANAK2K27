@@ -197,7 +197,7 @@ const cinzelDecorative = Cinzel_Decorative({
 
 export const metadata = {
 
-  title: "Dhanak 2027 - Embers from Ashes | IIST",
+  title: "Dhanak 2027 - Ember from Ashes | IIST",
 
   description: "Dhanak 2027 - The Annual Cultural Festival of IIST Thiruvananthapuram.",
 
@@ -259,7 +259,7 @@ export default function RootLayout({ children }) {
           />
         </noscript>
 
-        {/* Official Dhanak 2026 Festival Browser Tab Favicons (cache-busted to immediately override browser cache) */}
+        {/* Official Dhanak 2027 Festival Browser Tab Favicons (cache-busted to immediately override browser cache) */}
         <link rel="icon" type="image/png" sizes="512x512" href="/assets/dhanak-logo.png?v=2027" />
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/dhanak-logo.png?v=2027" />
         <link rel="icon" type="image/png" sizes="16x16" href="/assets/dhanak-logo.png?v=2027" />

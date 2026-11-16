@@ -13,6 +13,7 @@ import useCapacity from "../../hooks/useCapacity";
 import useMyRegisteredIds from "../../hooks/useMyRegisteredIds";
 import { showCartToast } from "@/lib/cartToast";
 import { parsePriceLabel } from "@/lib/parsePriceLabel";
+import { isProfileComplete, promptProfileCompletion } from "@/lib/profileCompletion";
 
 const ParallaxCard = ({ card, index, basePath = "/workshop", width }) => {
   const cardWidth = width || card.layout?.width || "500px";
@@ -60,7 +61,14 @@ const ParallaxCard = ({ card, index, basePath = "/workshop", width }) => {
     if (inCart || isClosed || isRegistered) return;
     if (!user) {
       playClick();
-      router.push("/login?redirect=/cart");
+      router.push(`/login?redirect=${encodeURIComponent(basePath)}`);
+      return;
+    }
+    if (!isProfileComplete(profile)) {
+      playClick();
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
+      router.push("/profile");
       return;
     }
     playGlitch();
@@ -81,7 +89,9 @@ const ParallaxCard = ({ card, index, basePath = "/workshop", width }) => {
       router.push(`/login?redirect=${encodeURIComponent(`${basePath}/${card.id}`)}`);
       return;
     }
-    if (!profile?.name || !profile?.phone || !profile?.college || !profile?.college_id || !profile?.aadhaar_number) {
+    if (!isProfileComplete(profile)) {
+      showCartToast("Please complete your profile before registering");
+      promptProfileCompletion();
       router.push("/profile");
       return;
     }

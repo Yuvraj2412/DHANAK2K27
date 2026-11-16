@@ -132,7 +132,7 @@ export async function POST(req) {
       return NextResponse.json({ success: false, message: 'eventId is required.' }, { status: 400 });
     }
     if (!memberCode) {
-      return NextResponse.json({ success: false, message: 'Enter a CNS-id.' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'Enter a DHN-ID.' }, { status: 400 });
     }
 
     const { groupSize } = await resolveEventGroupSize(supabase, eventId);
@@ -165,7 +165,7 @@ export async function POST(req) {
 
     if (roster.includes(memberCode)) {
       return NextResponse.json(
-        { success: false, message: 'That CNS-id is already on the team.' },
+        { success: false, message: 'That DHN-ID is already on the team.' },
         { status: 400 }
       );
     }
@@ -179,7 +179,7 @@ export async function POST(req) {
     const { profiles: memberProfiles, missing } = await resolveMemberProfiles(supabase, [memberCode]);
     if (missing.length > 0) {
       return NextResponse.json(
-        { success: false, message: `No account found for CNS-id ${memberCode}.` },
+        { success: false, message: `No account found for DHN-ID ${memberCode}.` },
         { status: 400 }
       );
     }

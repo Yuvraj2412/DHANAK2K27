@@ -441,7 +441,7 @@ const CATALOG_TEXT_FIELDS = [
   { key: 'group_size', label: 'Group Size (1 = individual, no team required)' },
   { key: 'eligibility', label: 'Eligibility' },
   { key: 'venue', label: 'Venue' },
-  { key: 'event_date', label: 'Date', hint: 'e.g. 12 Mar 2026' },
+  { key: 'event_date', label: 'Date', hint: 'e.g. 18 Mar 2027' },
   { key: 'timing', label: 'Time', hint: 'e.g. 4:00 PM' },
   { key: 'prize_pool', label: 'Prize Pool', hint: 'e.g. ₹50,000' },
   {
@@ -475,7 +475,7 @@ const TEXTAREA_LIST_KEYS = new Set(['about_extra', 'highlights', 'requirements',
 // List-shaped fields, edited as chips (type + Enter to add). Coordinator
 // Access is the one field that genuinely needs multiple values.
 const CATALOG_LIST_FIELDS = [
-  { key: 'access', label: 'Coordinator Access — CNS-ids (never shown publicly; grants /data visibility)' },
+  { key: 'access', label: 'Coordinator Access — DHN-IDs (never shown publicly; grants /data visibility)' },
 ];
 
 // Rendered with dedicated color-stop pickers instead of a plain text input.
@@ -880,7 +880,7 @@ function AdminDashboard({ session, onLogout }) {
       const buckets = paidBuckets(u);
       return {
         Name: u.name || '',
-        'CNS-id': u.unique_code || '',
+        'DHN-ID': u.unique_code || '',
         Email: u.email || '',
         Phone: u.phone || '',
         'Aadhaar Number': u.aadhaar_number || '',
@@ -905,7 +905,7 @@ function AdminDashboard({ session, onLogout }) {
     const accommodationUsers = users.filter(hasAccommodation);
     const rows = accommodationUsers.map((u) => ({
       Name: u.name || u.registration?.details?.name || '',
-      'CNS-id': u.unique_code || u.registration?.details?.unique_code || '',
+      'DHN-ID': u.unique_code || u.registration?.details?.unique_code || '',
       Email: u.email || '',
       Phone: u.phone || u.registration?.details?.phone || '',
       Gender: u.gender || u.registration?.details?.gender || '',
@@ -1547,7 +1547,7 @@ function CheckInPanel({ session, pushToast, users, onRefresh }) {
             type="text"
             value={manualCode}
             onChange={(e) => setManualCode(e.target.value.toUpperCase())}
-            placeholder="Enter CNS-id manually"
+            placeholder="Enter DHN-ID manually"
             className="w-48 rounded-full border border-white/15 bg-black/40 px-4 py-2.5 text-xs font-mono outline-none transition-colors focus:border-orange-500/30/60"
           />
           <button
@@ -1586,7 +1586,7 @@ function CheckInPanel({ session, pushToast, users, onRefresh }) {
               <thead>
                 <tr className="border-b border-white/10 bg-white/[0.03] text-[10px] uppercase tracking-[0.15em] text-white/40">
                   <th className="px-4 py-2.5 font-semibold">Name</th>
-                  <th className="px-4 py-2.5 font-semibold">CNS-id</th>
+                  <th className="px-4 py-2.5 font-semibold">DHN-ID</th>
                   <th className="px-4 py-2.5 font-semibold">Phone</th>
                   <th className="px-4 py-2.5 font-semibold">Check-in Time</th>
                 </tr>
@@ -1631,7 +1631,7 @@ function CheckInResultModal({ result, onRescan, onClose }) {
               </span>
             </div>
             <div className="mb-4 grid grid-cols-1 gap-1.5 text-xs text-white/60 sm:grid-cols-2">
-              <p>CNS-id: <span className="text-amber-300">{result.data.unique_code}</span></p>
+              <p>DHN-ID: <span className="text-amber-300">{result.data.unique_code}</span></p>
               <p>Phone: {result.data.phone || '—'}</p>
               <p>College: {result.data.college || '—'}</p>
               <p>College ID: {result.data.college_id || '—'}</p>
@@ -2715,7 +2715,7 @@ function ParticipantsPanel({ eventId, title, groupSize, ownerCode, session, push
                 type="text"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                placeholder="New CNS-id"
+                placeholder="New DHN-ID"
                 className="w-28 rounded-full border border-white/15 bg-black/40 px-2 py-0.5 font-mono text-[10px] text-white outline-none focus:border-orange-500/30/60"
               />
               <button
@@ -2789,7 +2789,7 @@ function TeamRegistrationsPanel({ eventId, groupSize, session }) {
   return (
     <div className="mt-5 border-t border-white/10 pt-4">
       <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-orange-400/80">
-        Team Registrations — {groupSize} CNS-ids each
+        Team Registrations — {groupSize} DHN-IDs each
       </p>
       {error && <p className="mb-2 text-xs text-red-400">{error}</p>}
       {teams === null ? (
@@ -2900,7 +2900,7 @@ function TeamRow({ team, groupSize, session, nameByCode, onSaved }) {
                   addCode();
                 }
               }}
-              placeholder="CNS-XXXXXX"
+              placeholder="DHN-XXXXXX"
               disabled={codes.length >= groupSize}
               className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white outline-none focus:border-orange-500/30/60 disabled:opacity-40"
             />

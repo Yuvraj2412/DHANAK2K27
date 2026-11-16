@@ -70,7 +70,7 @@ export default function Hero() {
       <div className="hero-content">
 
         <p className="hero-tag">
-          ABOUT CONSCIENTIA · IIST
+          ABOUT DHANAK · IIST
         </p>
 
         <h1 ref={title}>
