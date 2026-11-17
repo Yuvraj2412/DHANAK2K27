@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useCallback, useEffect, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
-import { generateUniqueCode } from '@/lib/uniqueCode';
 import { useAuth } from './AuthContext';
 
 const ProfileContext = createContext({
@@ -50,6 +49,32 @@ function getFallbackProfile(user) {
   };
 }
 
+function readCachedProfileForUser(userId) {
+  if (typeof window === 'undefined' || !userId) return null;
+  try {
+    const raw = window.localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = sanitizeProfile(JSON.parse(raw));
+    if (parsed && parsed.user_id === userId) {
+      return parsed;
+    }
+    // Clear stale cache belonging to another user
+    window.localStorage.removeItem(PROFILE_STORAGE_KEY);
+  } catch {
+    // ignore JSON error
+  }
+  return null;
+}
+
+function writeCachedProfile(data) {
+  if (typeof window === 'undefined' || !data) return;
+  try {
+    window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // ignore storage quota errors
+  }
+}
+
 export function ProfileProvider({ children }) {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
@@ -63,23 +88,17 @@ export function ProfileProvider({ children }) {
     }
     setLoading(true);
 
-    // If Supabase is not configured, load from local storage or create fallback
-    if (!isSupabaseConfigured()) {
-      if (typeof window !== 'undefined') {
-        const stored = window.localStorage.getItem(PROFILE_STORAGE_KEY);
-        if (stored) {
-          try {
-            const parsed = sanitizeProfile(JSON.parse(stored));
-            window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(parsed));
-            setProfile(parsed);
-            setLoading(false);
-            return;
-          } catch {
-            // ignore JSON error
-          }
-        }
+    const isLocalMockUser = String(user.id || '').startsWith('dhanak_user_');
+
+    // Only use local-only fallback when Supabase is not configured (or dev mock login)
+    if (!isSupabaseConfigured() || isLocalMockUser) {
+      const cached = readCachedProfileForUser(user.id);
+      if (cached) {
+        writeCachedProfile(cached);
+        setProfile(cached);
+      } else {
         const initial = getFallbackProfile(user);
-        window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(initial));
+        writeCachedProfile(initial);
         setProfile(initial);
       }
       setLoading(false);
@@ -87,40 +106,49 @@ export function ProfileProvider({ children }) {
     }
 
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+
+      if (!accessToken) {
+        // Without a verified Supabase session, do not invent a fake DHN-ID profile.
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
+      // Prefer server /api/profile route (creates row if absent & bypasses transient client RLS quirks)
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${accessToken}` },
+          cache: 'no-store',
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json?.success && json?.data) {
+          const clean = sanitizeProfile(json.data);
+          setProfile(clean);
+          writeCachedProfile(clean);
+          return;
+        }
+      } catch {
+        // Fall through to direct Supabase query
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (error || !data) {
-        // Fallback to local storage if Supabase returned error or empty
-        if (typeof window !== 'undefined') {
-          const stored = window.localStorage.getItem(PROFILE_STORAGE_KEY);
-          if (stored) {
-            try {
-              const parsed = sanitizeProfile(JSON.parse(stored));
-              window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(parsed));
-              setProfile(parsed);
-              setLoading(false);
-              return;
-            } catch {
-              // ignore
-            }
-          }
-        }
-        const fallback = getFallbackProfile(user);
-        setProfile(fallback);
-      } else {
+      if (!error && data) {
         const clean = sanitizeProfile(data);
         setProfile(clean);
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(clean));
-        }
+        writeCachedProfile(clean);
+      } else {
+        setProfile(readCachedProfileForUser(user.id));
       }
     } catch {
-      const fallback = getFallbackProfile(user);
-      setProfile(fallback);
+      setProfile(readCachedProfileForUser(user.id));
     } finally {
       setLoading(false);
     }
@@ -134,49 +162,61 @@ export function ProfileProvider({ children }) {
     async (fields) => {
       if (!user) return { error: 'Not signed in.' };
 
-      const current = profile || getFallbackProfile(user);
-      const updated = {
-        ...current,
-        ...fields,
-        user_id: user.id,
-        email: user.email?.toLowerCase() || current.email,
-        updated_at: new Date().toISOString(),
-      };
+      const isLocalMockUser = String(user.id || '').startsWith('dhanak_user_');
 
-      // Always persist to localStorage for instant reliable local caching
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updated));
-      }
-      setProfile(updated);
-
-      if (!isSupabaseConfigured()) {
+      if (!isSupabaseConfigured() || isLocalMockUser) {
+        const current = profile || getFallbackProfile(user);
+        const updated = {
+          ...current,
+          ...fields,
+          user_id: user.id,
+          email: user.email?.toLowerCase() || current.email,
+          updated_at: new Date().toISOString(),
+        };
+        writeCachedProfile(updated);
+        setProfile(updated);
         return { data: updated };
       }
 
       try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .upsert(
-            {
-              user_id: user.id,
-              unique_code: updated.unique_code || generateUniqueCode(),
-              email: user.email?.toLowerCase() || null,
-              ...fields,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: 'user_id' }
-          )
-          .select()
-          .maybeSingle();
-        if (error) {
-          console.warn('[ProfileContext] upsert failed, cached locally', error);
-          return { data: updated };
+        const { data: sessionData } = await supabase.auth.getSession();
+        const accessToken = sessionData?.session?.access_token;
+
+        if (!accessToken) {
+          return {
+            error:
+              'Your login session could not be verified. Please sign out and sign in again to save your profile.',
+          };
         }
-        if (data) setProfile(data);
-        return { data: data || updated };
+
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ fields }),
+        });
+
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || !json?.success || !json?.data) {
+          return {
+            error:
+              json?.error ||
+              'Failed to save profile to Supabase. Please check your connection and try again.',
+          };
+        }
+
+        const clean = sanitizeProfile(json.data);
+        writeCachedProfile(clean);
+        setProfile(clean);
+        return { data: clean };
       } catch (err) {
-        console.warn('[ProfileContext] network error, cached locally', err);
-        return { data: updated };
+        return {
+          error:
+            err?.message ||
+            'Network error while saving profile. Nothing was saved — please try again.',
+        };
       }
     },
     [user, profile]

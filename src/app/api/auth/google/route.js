@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { generateUniqueCode } from '@/lib/uniqueCode';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+const anonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const isConfigured = Boolean(
@@ -22,7 +23,12 @@ const hasValidServiceRoleKey = Boolean(
   !serviceKey.includes('your-service-role-key')
 );
 
-const anonClient = isConfigured ? createClient(supabaseUrl, anonKey) : null;
+function createStatelessAnonClient() {
+  if (!isConfigured) return null;
+  return createClient(supabaseUrl, anonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 function adminClient() {
   if (!hasValidServiceRoleKey) return null;
@@ -71,51 +77,75 @@ export async function POST(req) {
           email,
         });
 
-        if (!linkError && linkData?.properties?.hashed_token) {
-          const userId = linkData.user?.id;
-          if (userId) {
-            const { data: existingProfile } = await admin
-              .from('profiles')
-              .select('user_id')
-              .eq('user_id', userId)
-              .maybeSingle();
+        if (linkError || !linkData?.properties?.hashed_token) {
+          throw linkError || new Error('Could not generate Google sign-in token.');
+        }
 
-            if (!existingProfile) {
-              const googleName =
-                (typeof payload.name === 'string' && payload.name.trim()) ||
-                [payload.given_name, payload.family_name].filter(Boolean).join(' ').trim() ||
-                null;
+        const userId = linkData.user?.id;
+        if (userId) {
+          const { data: existingProfile } = await admin
+            .from('profiles')
+            .select('user_id')
+            .eq('user_id', userId)
+            .maybeSingle();
 
-              let attemptsLeft = 3;
-              while (attemptsLeft > 0) {
-                const { error: profileError } = await admin.from('profiles').insert({
-                  user_id: userId,
-                  unique_code: generateUniqueCode(),
-                  email,
-                  ...(googleName ? { name: googleName } : {}),
-                });
-                if (!profileError) break;
-                attemptsLeft -= 1;
-              }
+          if (!existingProfile) {
+            const googleName =
+              (typeof payload.name === 'string' && payload.name.trim()) ||
+              [payload.given_name, payload.family_name].filter(Boolean).join(' ').trim() ||
+              null;
+
+            let attemptsLeft = 3;
+            while (attemptsLeft > 0) {
+              const { error: profileError } = await admin.from('profiles').insert({
+                user_id: userId,
+                unique_code: generateUniqueCode(),
+                email,
+                ...(googleName ? { name: googleName } : {}),
+              });
+              if (!profileError) break;
+              attemptsLeft -= 1;
             }
           }
-
-          const { data: verifyData, error: verifyError } = await anonClient.auth.verifyOtp({
-            token_hash: linkData.properties.hashed_token,
-            type: 'email',
-          });
-
-          if (!verifyError && verifyData?.session) {
-            const created = !!linkData.user && new Date(linkData.user.created_at).getTime() > Date.now() - 15000;
-            return NextResponse.json({ session: verifyData.session, created });
-          }
         }
+
+        const verifyClient = createStatelessAnonClient();
+        const { data: verifyData, error: verifyError } = await verifyClient.auth.verifyOtp({
+          token_hash: linkData.properties.hashed_token,
+          type: 'email',
+        });
+
+        if (verifyError || !verifyData?.session) {
+          throw verifyError || new Error('Could not verify generated Supabase session.');
+        }
+
+        const created =
+          !!linkData.user && new Date(linkData.user.created_at).getTime() > Date.now() - 15000;
+        return NextResponse.json({ session: verifyData.session, created });
       } catch (adminErr) {
-        console.warn('[api/auth/google] Admin link generation failed, creating direct session:', adminErr.message);
+        console.error('[api/auth/google] Supabase session creation failed:', adminErr?.message);
+        if (isConfigured) {
+          return NextResponse.json(
+            {
+              error:
+                adminErr?.message ||
+                'Could not establish Supabase session for Google Sign-In. Please try again.',
+            },
+            { status: 500 }
+          );
+        }
       }
+    } else if (isConfigured) {
+      return NextResponse.json(
+        {
+          error:
+            'Google Sign-In requires SUPABASE_SERVICE_ROLE_KEY to be set in environment variables.',
+        },
+        { status: 503 }
+      );
     }
 
-    // Direct verified Google user session
+    // Offline / unconfigured dev-only mock session (never used when Supabase is configured)
     const googleName =
       (typeof payload.name === 'string' && payload.name.trim()) ||
       [payload.given_name, payload.family_name].filter(Boolean).join(' ').trim() ||

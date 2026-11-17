@@ -74,17 +74,25 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let active = true;
 
-    // Check if we have a persisted verified user in localStorage
+    // Only hydrate synchronously from localStorage when Supabase is NOT configured
+    // or for local-only dev/mobile sessions. Real Supabase sessions are validated
+    // via `supabase.auth.getSession()` below so orphaned caches never bypass RLS or login.
     if (typeof window !== 'undefined') {
       try {
         const cachedUser = window.localStorage.getItem('dhanak_auth_user');
         if (cachedUser) {
           const parsed = JSON.parse(cachedUser);
+          const isLocalOnly =
+            String(parsed?.id || '').startsWith('dhanak_user_') ||
+            Boolean(parsed?.user_metadata?.phone_verified);
           if (parsed && isVerifiedUser(parsed)) {
-            setUser(parsed);
-            setLoading(false);
+            if (!isSupabaseConfigured() || isLocalOnly) {
+              setUser(parsed);
+              setLoading(false);
+            }
           } else {
             window.localStorage.removeItem('dhanak_auth_user');
+            window.localStorage.removeItem('dhanak_profile_data');
           }
         }
       } catch (err) {
@@ -154,9 +162,32 @@ export function AuthProvider({ children }) {
                 window.localStorage.setItem('dhanak_auth_user', JSON.stringify(userData.user));
               }
               await ensureClientProfileRow(userData.user);
+              return;
+            }
+            // No active Supabase session exists. Clear any orphaned non-dev cached user
+            // so the browser cannot remain in a broken unauthenticated local-only state.
+            if (typeof window !== 'undefined') {
+              const rawCached = window.localStorage.getItem('dhanak_auth_user');
+              if (rawCached) {
+                try {
+                  const parsedCached = JSON.parse(rawCached);
+                  const isLocalOnly =
+                    String(parsedCached?.id || '').startsWith('dhanak_user_') ||
+                    Boolean(parsedCached?.user_metadata?.phone_verified);
+                  if (!isLocalOnly) {
+                    window.localStorage.removeItem('dhanak_auth_user');
+                    window.localStorage.removeItem('dhanak_profile_data');
+                    setUser(null);
+                  }
+                } catch {
+                  window.localStorage.removeItem('dhanak_auth_user');
+                  window.localStorage.removeItem('dhanak_profile_data');
+                  setUser(null);
+                }
+              }
             }
           } catch {
-            // Offline or no active Supabase session
+            // Offline or transient failure
           } finally {
             if (active) setLoading(false);
           }
@@ -181,6 +212,7 @@ export function AuthProvider({ children }) {
         setUser(null);
         if (typeof window !== 'undefined') {
           window.localStorage.removeItem('dhanak_auth_user');
+          window.localStorage.removeItem('dhanak_profile_data');
         }
       }
       setLoading(false);
@@ -190,6 +222,51 @@ export function AuthProvider({ children }) {
       active = false;
       sub?.subscription?.unsubscribe();
     };
+  }, []);
+
+  /**
+   * Persist Supabase JWT session BEFORE updating React `user` state so
+   * any redirect or profile fetch that reacts to `user` finds an active session.
+   */
+  const applyAuthSession = useCallback(async (session) => {
+    if (!session?.user) return null;
+    let resolvedUser = session.user;
+
+    if (
+      isSupabaseConfigured() &&
+      session.access_token &&
+      !String(session.access_token).startsWith('dhanak_token_')
+    ) {
+      try {
+        const { data: setData, error: setErr } = await supabase.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+        });
+        if (!setErr && setData?.user) {
+          resolvedUser = setData.user;
+        }
+      } catch {
+        // Ignore non-JWT session error
+      }
+    }
+
+    if (typeof window !== 'undefined') {
+      try {
+        const existingProfileRaw = window.localStorage.getItem('dhanak_profile_data');
+        if (existingProfileRaw) {
+          const parsedProfile = JSON.parse(existingProfileRaw);
+          if (parsedProfile?.user_id && parsedProfile.user_id !== resolvedUser.id) {
+            window.localStorage.removeItem('dhanak_profile_data');
+          }
+        }
+      } catch {
+        window.localStorage.removeItem('dhanak_profile_data');
+      }
+      window.localStorage.setItem('dhanak_auth_user', JSON.stringify(resolvedUser));
+    }
+
+    setUser(resolvedUser);
+    return resolvedUser;
   }, []);
 
   const devLogin = useCallback(async (customEmail) => {
@@ -210,87 +287,71 @@ export function AuthProvider({ children }) {
     return { user: mockUser, created: false };
   }, []);
 
-  const authenticate = useCallback(async (email, password, mode = 'login') => {
-    const trimmedEmail = email.trim().toLowerCase();
+  const authenticate = useCallback(
+    async (email, password, mode = 'login') => {
+      const trimmedEmail = email.trim().toLowerCase();
 
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmedEmail, password, mode }),
-      });
-      const data = await res.json().catch(() => ({}));
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: trimmedEmail, password, mode }),
+        });
+        const data = await res.json().catch(() => ({}));
 
-      if (data?.requiresVerification) {
-        return {
-          requiresVerification: true,
-          email: data.email || trimmedEmail,
-          message: data.message || null,
-          error: data.error || null,
-        };
-      }
-
-      if (!res.ok || data.error) {
-        return { error: data.error || 'Authentication failed.' };
-      }
-
-      if (data?.session?.user) {
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+        if (data?.requiresVerification) {
+          return {
+            requiresVerification: true,
+            email: data.email || trimmedEmail,
+            message: data.message || null,
+            error: data.error || null,
+          };
         }
-        setUser(data.session.user);
-        try {
-          await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-        } catch {
-          // Ignore if non-JWT session
+
+        if (!res.ok || data.error) {
+          return { error: data.error || 'Authentication failed.' };
         }
-        return { user: data.session.user, created: data.created };
-      }
 
-      return { error: 'Authentication failed. Please check your credentials.' };
-    } catch (err) {
-      return { error: err.message || 'Connection error. Please try again.' };
-    }
-  }, []);
-
-  const verifyEmailOtp = useCallback(async (email, otp) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmedEmail, otp: String(otp || '').trim(), mode: 'verify-otp' }),
-      });
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok || data.error) {
-        return { error: data.error || 'Invalid or expired verification code.' };
-      }
-
-      if (data?.session?.user) {
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+        if (data?.session?.user) {
+          const resolvedUser = await applyAuthSession(data.session);
+          return { user: resolvedUser, created: data.created };
         }
-        setUser(data.session.user);
-        try {
-          await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-        } catch {
-          // Ignore
-        }
-        return { user: data.session.user, verified: true };
-      }
 
-      return { error: 'Could not verify code. Please try again.' };
-    } catch (err) {
-      return { error: err.message || 'Connection error. Please try again.' };
-    }
-  }, []);
+        return { error: 'Authentication failed. Please check your credentials.' };
+      } catch (err) {
+        return { error: err.message || 'Connection error. Please try again.' };
+      }
+    },
+    [applyAuthSession]
+  );
+
+  const verifyEmailOtp = useCallback(
+    async (email, otp) => {
+      const trimmedEmail = email.trim().toLowerCase();
+      try {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: trimmedEmail, otp: String(otp || '').trim(), mode: 'verify-otp' }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || data.error) {
+          return { error: data.error || 'Invalid or expired verification code.' };
+        }
+
+        if (data?.session?.user) {
+          const resolvedUser = await applyAuthSession(data.session);
+          return { user: resolvedUser, verified: true };
+        }
+
+        return { error: 'Could not verify code. Please try again.' };
+      } catch (err) {
+        return { error: err.message || 'Connection error. Please try again.' };
+      }
+    },
+    [applyAuthSession]
+  );
 
   const resendVerificationEmail = useCallback(async (email) => {
     const trimmedEmail = email.trim().toLowerCase();
@@ -357,36 +418,28 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const authenticateWithGoogle = useCallback(async (idToken) => {
-    const res = await fetch('/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential: idToken }),
-    });
-    const data = await res.json().catch(() => ({}));
+  const authenticateWithGoogle = useCallback(
+    async (idToken) => {
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: idToken }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-    if (!res.ok || data.error) {
-      return { error: data.error || 'Google sign-in failed.' };
-    }
-
-    if (data?.session?.user) {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('dhanak_auth_user', JSON.stringify(data.session.user));
+      if (!res.ok || data.error) {
+        return { error: data.error || 'Google sign-in failed.' };
       }
-      setUser(data.session.user);
-      try {
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-      } catch {
-        // Ignore mock token failure
-      }
-      return { user: data.session.user, created: data.created };
-    }
 
-    return { error: 'Invalid Google session' };
-  }, []);
+      if (data?.session?.user) {
+        const resolvedUser = await applyAuthSession(data.session);
+        return { user: resolvedUser, created: data.created };
+      }
+
+      return { error: 'Invalid Google session' };
+    },
+    [applyAuthSession]
+  );
 
   const signInWithGoogleOAuth = useCallback(async (redirectPath = '/') => {
     if (!isSupabaseConfigured()) {
