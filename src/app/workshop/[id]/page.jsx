@@ -402,36 +402,21 @@ export default function WorkshopDetailPage() {
                 </p>
               )}
 
-              {/* Brochure & Syllabus Action Bar in Hero */}
-              {(card.brochureUrl || card.syllabusPdfUrl) && (
+              {/* Brochure Action Bar in Hero */}
+              {card.brochureUrl && (
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  {card.brochureUrl && (
-                    <a
-                      href={card.brochureUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download={isLocalBrochure ? true : undefined}
-                      onClick={() => playClick()}
-                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/25 to-orange-500/20 hover:from-amber-500/35 hover:to-orange-500/30 border border-amber-400/50 px-4 py-2.5 text-xs sm:text-sm font-bold text-amber-200 hover:text-white transition-all shadow-[0_0_20px_rgba(255,160,0,0.2)]"
-                    >
-                      <Download size={16} className="text-amber-400 shrink-0" />
-                      <span>Download / View Brochure</span>
-                      <ExternalLink size={13} className="text-amber-300/70 shrink-0" />
-                    </a>
-                  )}
-                  {card.syllabusPdfUrl && (
-                    <a
-                      href={card.syllabusPdfUrl}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => playClick()}
-                      className="inline-flex items-center gap-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white/90 hover:text-white transition-all"
-                    >
-                      <FileText size={15} className="text-amber-400 shrink-0" />
-                      <span>Download Detailed Guide (PDF)</span>
-                    </a>
-                  )}
+                  <a
+                    href={card.brochureUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download={isLocalBrochure ? true : undefined}
+                    onClick={() => playClick()}
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/25 to-orange-500/20 hover:from-amber-500/35 hover:to-orange-500/30 border border-amber-400/50 px-4 py-2.5 text-xs sm:text-sm font-bold text-amber-200 hover:text-white transition-all shadow-[0_0_20px_rgba(255,160,0,0.2)]"
+                  >
+                    <Download size={16} className="text-amber-400 shrink-0" />
+                    <span>Download / View Brochure</span>
+                    <ExternalLink size={13} className="text-amber-300/70 shrink-0" />
+                  </a>
                 </div>
               )}
 
@@ -816,21 +801,6 @@ export default function WorkshopDetailPage() {
                     >
                       <Download size={15} className="text-amber-400 shrink-0" />
                       <span>Download Brochure</span>
-                    </a>
-                  )}
-
-                  {/* Download Detailed Curriculum Guide PDF if available */}
-                  {card.syllabusPdfUrl && (
-                    <a
-                      href={card.syllabusPdfUrl}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => playClick()}
-                      className="w-full py-2.5 px-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/15 text-white/80 hover:text-white text-[11px] font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <FileText size={14} className="text-amber-400 shrink-0" />
-                      <span>Download Curriculum PDF</span>
                     </a>
                   )}
                 </div>
