@@ -6,6 +6,7 @@ import { Search, ArrowLeft, Crown } from "lucide-react";
 import LavaWorkshopTile from "../components/LavaWorkshopTile";
 import FetchIntro from "../components/FetchIntro";
 import { getCatalog } from "@/lib/catalogStore";
+import { WORKSHOP_COMBOS } from "@/lib/workshopCombos";
 import { groupBySection } from "../lib/groupBySection";
 import useSound from "../hooks/useSound";
 
@@ -163,6 +164,53 @@ export default function WorkshopPage() {
                   &times;
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Workshop Combos Banner */}
+          <div className="mt-8 rounded-2xl border border-[#FFB300]/30 bg-[#150B06]/90 p-4 sm:p-5 shadow-lg">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <p className="text-xs font-mono font-bold uppercase tracking-widest text-[#FFD54F]">
+                Workshop Combos · Auto-Applied at Checkout
+              </p>
+              <span className="text-[11px] text-white/70">
+                Add any 2 qualifying workshops to your cart to receive the deducted price automatically.
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {WORKSHOP_COMBOS.map((combo) => (
+                <div
+                  key={combo.id}
+                  className="rounded-xl border border-amber-500/25 bg-black/40 p-3 flex flex-col justify-between"
+                >
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      {combo.name}
+                    </p>
+                    <p className="text-[11px] text-white/75 mt-0.5 leading-snug">
+                      {combo.description}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-base font-black text-white">₹{combo.comboPrice}</span>
+                    <span className="text-xs text-white/40 line-through">₹{combo.originalPrice}</span>
+                    <span className="text-[10px] font-mono text-emerald-400">Save ₹{combo.savings}</span>
+                  </div>
+                </div>
+              ))}
+              <div className="rounded-xl border border-amber-500/25 bg-black/40 p-3 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                    Basic Combo
+                  </p>
+                  <p className="text-[11px] text-white/75 mt-0.5 leading-snug">
+                    Any 2 Workshops in Cart
+                  </p>
+                </div>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <span className="text-base font-black text-emerald-400">Flat ₹50 OFF</span>
+                </div>
+              </div>
             </div>
           </div>
         </header>

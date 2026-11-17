@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import ChunkyImage from '../components/ChunkyImage';
 import { motion } from 'framer-motion';
@@ -12,6 +12,7 @@ import PrePaymentReminderModal from '../components/PrePaymentReminderModal';
 import TeamRosterBuilder from '../components/TeamRosterBuilder';
 import { startRazorpayCheckout } from '@/lib/checkout';
 import { isProfileComplete as checkProfileComplete, promptProfileCompletion } from '@/lib/profileCompletion';
+import { calculateCartPricing } from '@/lib/workshopCombos';
 
 export default function CartPage() {
   const { user, loading } = useAuth();
@@ -63,6 +64,7 @@ export default function CartPage() {
   };
 
   const isProfileComplete = checkProfileComplete(profile);
+  const pricing = useMemo(() => calculateCartPricing(items), [items]);
 
   const runCheckout = async () => {
     setError('');
@@ -125,7 +127,7 @@ export default function CartPage() {
       }
 
       await startRazorpayCheckout(
-        items,
+        pricing.normalizedItems,
         {
           ...attendee,
           email: user.email,
@@ -197,7 +199,7 @@ export default function CartPage() {
         ) : (
           <>
             <div className="mb-4 space-y-3">
-              {items.map((item) => {
+              {pricing.normalizedItems.map((item) => {
                 const qty = item.qty || 1;
                 const unit = item.unitPrice;
                 const lineTotal = typeof unit === 'number' ? unit * qty : null;
@@ -250,19 +252,44 @@ export default function CartPage() {
             </div>
 
             {(() => {
-              const total = items.reduce(
-                (sum, item) => sum + (typeof item.unitPrice === 'number' ? item.unitPrice * (item.qty || 1) : 0),
-                0
-              );
-              const unpriced = items.some((item) => typeof item.unitPrice !== 'number');
-              return total > 0 ? (
-                <div className="mb-8 rounded-xl border border-orange-500/20 bg-orange-500/[0.04] px-4 py-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-bold uppercase tracking-[0.15em] text-white/70">Total Cost</span>
-                    <span className="text-lg font-bold text-amber-300">₹{total}</span>
+              const { originalSubtotal, appliedCombos, totalDiscount, finalTotal } = pricing;
+              const unpriced = pricing.normalizedItems.some((item) => typeof item.unitPrice !== 'number');
+              return originalSubtotal > 0 ? (
+                <div className="mb-8 rounded-xl border border-orange-500/20 bg-orange-500/[0.04] px-4 py-3 space-y-2">
+                  {totalDiscount > 0 && (
+                    <>
+                      <div className="flex items-center justify-between text-xs text-white/60">
+                        <span>Subtotal</span>
+                        <span className="line-through font-mono">₹{originalSubtotal}</span>
+                      </div>
+                      {appliedCombos.map((combo) => (
+                        <div
+                          key={combo.id}
+                          className="flex items-center justify-between gap-2 text-xs text-emerald-400"
+                        >
+                          <span className="truncate">
+                            ✓ {combo.name} ({combo.description})
+                          </span>
+                          <span className="font-mono font-bold shrink-0">-₹{combo.savings}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  <div className="flex items-center justify-between text-sm pt-1 border-t border-white/10">
+                    <span className="font-bold uppercase tracking-[0.15em] text-white/70">Total Payable</span>
+                    <div className="flex items-baseline gap-2">
+                      {totalDiscount > 0 && (
+                        <span className="text-[11px] font-mono text-emerald-400">
+                          Saved ₹{totalDiscount}
+                        </span>
+                      )}
+                      <span className="text-lg font-bold text-amber-300">₹{finalTotal}</span>
+                    </div>
                   </div>
                   <p className="mt-1.5 text-[11px] leading-relaxed text-white/35">
-                    Informational only{unpriced ? ' — some items have no listed price and are excluded from this sum' : ''}. The amount charged at checkout is set by the ticket price on the payment page.
+                    {totalDiscount > 0
+                      ? 'Workshop combo discounts are automatically deducted above and will apply at Razorpay checkout.'
+                      : `Informational only${unpriced ? ' — some items have no listed price and are excluded from this sum' : ''}. Add any 2 workshops to automatically unlock a combo discount.`}
                   </p>
                 </div>
               ) : (
@@ -434,7 +461,7 @@ export default function CartPage() {
                   ? 'Initiating Razorpay…'
                   : !teamState.isAllTeamsValid
                     ? 'Complete Team Roster to Proceed ›'
-                    : `Pay ₹${items.reduce((sum, item) => sum + (typeof item.unitPrice === 'number' ? item.unitPrice * (item.qty || 1) : 0), 0)} with Razorpay (${items.length} item${items.length > 1 ? 's' : ''}) ›`}
+                    : `Pay ₹${pricing.finalTotal} with Razorpay (${items.length} item${items.length > 1 ? 's' : ''}) ›`}
               </button>
             </form>
           </>

@@ -84,4 +84,5 @@ Official web application for **Dhanak 2027**, the Annual Cultural Festival of th
 
 - **Brand & Navigation Config:** Centralized in `src/lib/festConfig.js`.
 - **Events & Assets:** Event catalog and tile photography live in `src/lib/dhanakEvents.js` and `public/assets/events/`.
+- **Workshops & Combos:** 8 official online workshops configured in `src/lib/dhanakWorkshops.js` with brochures in `public/brochures/`. Combo discounts (Space Combo, UAV Combo, Rover Combo, and 2-workshop Basic Combo) are computed in `src/lib/workshopCombos.js` and applied across cart, checkout, and Razorpay order generation.
 - **Event Registration Toggle:** Individual event pages currently gated with `"Announcing Later"` can be unlocked or re-locked reversibly via `UNLOCKED_EVENT_IDS` in `src/app/events/[id]/page.jsx`.

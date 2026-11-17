@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { CHECKOUT_STORAGE_KEYS } from '@/lib/checkout';
+import { calculateCartPricing } from '@/lib/workshopCombos';
 
 // TiQR often still reports the booking as pending for a few seconds after
 // the gateway redirects back, so poll instead of giving up on the first
@@ -109,10 +110,7 @@ function PaymentSuccessContent() {
         const details = JSON.parse(window.localStorage.getItem('registration_details') || '{}');
         const computedAmount =
           verifyData.amount ??
-          itemsMeta.reduce(
-            (sum, i) => sum + (Number(i.unitPrice) || 0) * (Number(i.qty) || 1),
-            0
-          );
+          calculateCartPricing(itemsMeta).finalTotal;
 
         const saveRes = await fetch('/api/save-registration', {
           method: 'POST',

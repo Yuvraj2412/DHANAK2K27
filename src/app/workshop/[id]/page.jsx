@@ -23,10 +23,13 @@ import {
   Target,
   Building2,
   ListChecks,
+  HelpCircle,
+  ChevronDown,
 } from "lucide-react";
 import FetchIntro from "@/app/components/FetchIntro";
 import ChunkyImage from "@/app/components/ChunkyImage";
 import { getCatalog, getCatalogItem } from "@/lib/catalogStore";
+import { getWorkshopComboHint } from "@/lib/workshopCombos";
 import { isProfileComplete, promptProfileCompletion } from "@/lib/profileCompletion";
 import useSound from "@/app/hooks/useSound";
 import { useAuth } from "@/app/context/AuthContext";
@@ -40,23 +43,65 @@ import LavaWorkshopTile from "@/app/components/LavaWorkshopTile";
 import FaqSection from "@/app/components/FaqSection";
 import { supabase } from "@/lib/supabaseClient";
 
-function SectionHeader({ icon: Icon, title, subtitle }) {
+function ExpandableSection({
+  icon: Icon,
+  title,
+  subtitle,
+  badge,
+  defaultOpen = false,
+  children,
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <div className="flex items-center gap-3.5 mb-5">
-      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/25 to-amber-500/10 border border-amber-400/35 flex items-center justify-center text-amber-300 shadow-[0_0_16px_rgba(255,140,0,0.2)] shrink-0">
-        <Icon size={18} />
+    <section className="transition-colors duration-200 hover:bg-white/[0.015]">
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between gap-4 p-5 sm:px-7 sm:py-5 text-left cursor-pointer select-none group"
+      >
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/25 to-amber-500/10 border border-amber-400/35 flex items-center justify-center text-amber-300 shadow-[0_0_16px_rgba(255,140,0,0.2)] shrink-0">
+            <Icon size={18} />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-amber-200 transition-colors">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-amber-400/70 truncate">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 shrink-0">
+          {badge && (
+            <span className="hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold text-amber-200/80 bg-amber-500/10 border border-amber-500/25">
+              {badge}
+            </span>
+          )}
+          <span className="w-8 h-8 rounded-lg border border-amber-500/25 bg-white/[0.03] group-hover:border-amber-400/50 flex items-center justify-center text-amber-300 transition-colors">
+            <ChevronDown
+              size={16}
+              className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            />
+          </span>
+        </div>
+      </button>
+
+      <div
+        className={`grid transition-all duration-300 ease-out ${
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="px-5 sm:px-7 pb-6 pt-1">{children}</div>
+        </div>
       </div>
-      <div>
-        <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="text-[11px] font-mono uppercase tracking-widest text-amber-400/70">
-            {subtitle}
-          </p>
-        )}
-      </div>
-    </div>
+    </section>
   );
 }
 
@@ -436,16 +481,37 @@ export default function WorkshopDetailPage() {
 
         {/* ── Main 2-Column Content & Sticky Registration Sidebar ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column (8 Cols): Cohesive Warm Ember-Gold Editorial Card */}
-          <div className="lg:col-span-8 rounded-2xl bg-[#130D09]/95 border border-amber-500/20 divide-y divide-amber-500/15 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)]">
-            {/* 0. Organizing Club Section (if applicable) */}
+          {/* Left Column (8 Cols): Clean & Minimalist Expandable Editorial Card */}
+          <div
+            key={card.id}
+            className="lg:col-span-8 rounded-2xl bg-[#130D09]/95 border border-amber-500/20 divide-y divide-amber-500/15 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)]"
+          >
+            {/* 1. Overview (expanded by default) */}
+            <ExpandableSection
+              icon={FileText}
+              title="Workshop Overview"
+              subtitle="About the Masterclass"
+              defaultOpen={true}
+            >
+              <div className="space-y-4 text-sm sm:text-[15px] text-white/90 leading-relaxed">
+                {card.description && <p>{card.description}</p>}
+                {Array.isArray(card.aboutExtra) &&
+                  card.aboutExtra.map((para, i) => (
+                    <p key={i} className="text-white/80">
+                      {para}
+                    </p>
+                  ))}
+              </div>
+            </ExpandableSection>
+
+            {/* 2. Organizing Club Section (if applicable) */}
             {(card.clubName || card.clubDescription) && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={Building2}
-                  title="Organizing Club"
-                  subtitle="Host Community at IIST"
-                />
+              <ExpandableSection
+                icon={Building2}
+                title="Organizing Club"
+                subtitle="Host Community at IIST"
+                badge="IIST Club"
+              >
                 <div className="flex flex-col sm:flex-row items-start gap-5 p-4 sm:p-5 rounded-xl bg-gradient-to-br from-[#1C120B] to-[#120B07] border border-amber-500/20">
                   {card.clubLogo && (
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-black/60 border border-amber-500/25 p-1.5 shrink-0">
@@ -470,35 +536,17 @@ export default function WorkshopDetailPage() {
                     )}
                   </div>
                 </div>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 1. Overview */}
-            <section className="p-6 sm:p-8">
-              <SectionHeader
-                icon={FileText}
-                title="Workshop Overview"
-                subtitle="About the Masterclass"
-              />
-              <div className="space-y-4 text-sm sm:text-[15px] text-white/90 leading-relaxed">
-                {card.description && <p>{card.description}</p>}
-                {Array.isArray(card.aboutExtra) &&
-                  card.aboutExtra.map((para, i) => (
-                    <p key={i} className="text-white/80">
-                      {para}
-                    </p>
-                  ))}
-              </div>
-            </section>
-
-            {/* 2. Key Takeaways & Curriculum Modules */}
+            {/* 3. Key Takeaways & Curriculum Modules */}
             {Array.isArray(card.highlights) && card.highlights.length > 0 && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={Sparkles}
-                  title="What You Will Learn"
-                  subtitle="Curriculum & Technical Topics"
-                />
+              <ExpandableSection
+                icon={Sparkles}
+                title="What You Will Learn"
+                subtitle="Curriculum & Technical Topics"
+                badge={`${card.highlights.length} Topics`}
+              >
                 <div className="grid grid-cols-1 gap-3.5">
                   {card.highlights.map((item, i) => (
                     <div
@@ -515,17 +563,17 @@ export default function WorkshopDetailPage() {
                     </div>
                   ))}
                 </div>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 3. Detailed Execution Timeline / Schedule (if present) */}
+            {/* 4. Detailed Execution Timeline / Schedule (if present) */}
             {Array.isArray(card.schedule) && card.schedule.length > 0 && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={ListChecks}
-                  title="Workshop Schedule & Timeline"
-                  subtitle="Session-by-Session Flow"
-                />
+              <ExpandableSection
+                icon={ListChecks}
+                title="Workshop Schedule & Timeline"
+                subtitle="Session-by-Session Flow"
+                badge={`${card.schedule.length} Sessions`}
+              >
                 <div className="space-y-2.5">
                   {card.schedule.map((slot, i) => (
                     <div
@@ -541,31 +589,31 @@ export default function WorkshopDetailPage() {
                     </div>
                   ))}
                 </div>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 4. Software & Tools (if present) */}
+            {/* 5. Software & Tools (if present) */}
             {card.softwareAndTools && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={Wrench}
-                  title="Software & Tools"
-                  subtitle="Environment & Stack"
-                />
+              <ExpandableSection
+                icon={Wrench}
+                title="Software & Tools"
+                subtitle="Environment & Stack"
+                badge="Tools"
+              >
                 <div className="p-4 rounded-xl bg-white/[0.03] border border-amber-500/20 text-xs sm:text-sm text-white/90 leading-relaxed">
                   {card.softwareAndTools}
                 </div>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 5. Prerequisites & Guidelines */}
+            {/* 6. Prerequisites & Guidelines */}
             {Array.isArray(card.requirements) && card.requirements.length > 0 && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={ShieldCheck}
-                  title="Eligibility & Prerequisites"
-                  subtitle="Who Can Attend"
-                />
+              <ExpandableSection
+                icon={ShieldCheck}
+                title="Eligibility & Prerequisites"
+                subtitle="Who Can Attend"
+                badge={`${card.requirements.length} Requirements`}
+              >
                 <ul className="space-y-3">
                   {card.requirements.map((req, i) => (
                     <li
@@ -579,17 +627,17 @@ export default function WorkshopDetailPage() {
                     </li>
                   ))}
                 </ul>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 6. Expected Learning Outcomes (if present) */}
+            {/* 7. Expected Learning Outcomes (if present) */}
             {Array.isArray(card.outcomes) && card.outcomes.length > 0 && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={Target}
-                  title="Expected Learning Outcomes"
-                  subtitle="Skills You Will Gain"
-                />
+              <ExpandableSection
+                icon={Target}
+                title="Expected Learning Outcomes"
+                subtitle="Skills You Will Gain"
+                badge={`${card.outcomes.length} Outcomes`}
+              >
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {card.outcomes.map((outcome, i) => (
                     <li
@@ -601,16 +649,16 @@ export default function WorkshopDetailPage() {
                     </li>
                   ))}
                 </ul>
-              </section>
+              </ExpandableSection>
             )}
 
-            {/* 7. Workshop Specifications Grid */}
-            <section className="p-6 sm:p-8">
-              <SectionHeader
-                icon={Award}
-                title="Workshop Specifications"
-                subtitle="Session Details"
-              />
+            {/* 8. Workshop Specifications Grid */}
+            <ExpandableSection
+              icon={Award}
+              title="Workshop Specifications"
+              subtitle="Session Details"
+              badge={`${specs.length} Details`}
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {specs.map((s) => (
                   <div
@@ -626,23 +674,26 @@ export default function WorkshopDetailPage() {
                   </div>
                 ))}
               </div>
-            </section>
+            </ExpandableSection>
 
-            {/* 8. Frequently Asked Questions */}
-            <FaqSection
-              faqs={workshopFaqs}
+            {/* 9. Frequently Asked Questions */}
+            <ExpandableSection
+              icon={HelpCircle}
               title="Frequently Asked Questions"
               subtitle="Everything You Need to Know"
-            />
+              badge={`${workshopFaqs.length} FAQs`}
+            >
+              <FaqSection faqs={workshopFaqs} hideHeader={true} />
+            </ExpandableSection>
 
-            {/* 9. Point of Contact */}
+            {/* 10. Point of Contact */}
             {Array.isArray(card.contacts) && card.contacts.length > 0 && (
-              <section className="p-6 sm:p-8">
-                <SectionHeader
-                  icon={Phone}
-                  title="Workshop Coordinators"
-                  subtitle="Direct Support"
-                />
+              <ExpandableSection
+                icon={Phone}
+                title="Workshop Coordinators"
+                subtitle="Direct Support"
+                badge={`${card.contacts.length} Contacts`}
+              >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {card.contacts.map((c, i) => (
                     <div
@@ -674,7 +725,7 @@ export default function WorkshopDetailPage() {
                     </div>
                   ))}
                 </div>
-              </section>
+              </ExpandableSection>
             )}
           </div>
 
@@ -707,6 +758,11 @@ export default function WorkshopDetailPage() {
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     {isClosed ? "Closed" : "Open"}
                   </span>
+                </div>
+
+                {/* Combo Offer Note */}
+                <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.06] px-3.5 py-2.5 text-[11px] leading-relaxed text-emerald-200">
+                  {getWorkshopComboHint(card.id).message}
                 </div>
 
                 {/* Action Buttons */}

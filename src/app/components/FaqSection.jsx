@@ -11,27 +11,30 @@ export default function FaqSection({
   faqs = [],
   title = "Frequently Asked Questions",
   subtitle = "Everything You Need to Know",
+  hideHeader = false,
 }) {
   if (!Array.isArray(faqs) || faqs.length === 0) return null;
 
   return (
-    <section className="p-6 sm:p-8">
+    <section className={hideHeader ? "" : "p-6 sm:p-8"}>
       {/* Section Header */}
-      <div className="flex items-center gap-3.5 mb-5">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/25 to-amber-500/10 border border-amber-400/35 flex items-center justify-center text-amber-300 shadow-[0_0_16px_rgba(255,140,0,0.2)] shrink-0">
-          <HelpCircle size={18} />
+      {!hideHeader && (
+        <div className="flex items-center gap-3.5 mb-5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500/25 to-amber-500/10 border border-amber-400/35 flex items-center justify-center text-amber-300 shadow-[0_0_16px_rgba(255,140,0,0.2)] shrink-0">
+            <HelpCircle size={18} />
+          </div>
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-[11px] font-mono uppercase tracking-widest text-amber-400/70">
+                {subtitle}
+              </p>
+            )}
+          </div>
         </div>
-        <div>
-          <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="text-[11px] font-mono uppercase tracking-widest text-amber-400/70">
-              {subtitle}
-            </p>
-          )}
-        </div>
-      </div>
+      )}
 
       {/* Accordion FAQ Items */}
       <div className="space-y-3">

@@ -22,6 +22,7 @@ import useProfile from '../hooks/useProfile';
 import { isProfileComplete, promptProfileCompletion } from '@/lib/profileCompletion';
 import { loadRazorpayScript, saveCheckoutSessionToStorage } from '@/lib/checkout';
 import { RAZORPAY_LOGO_DATA_URL } from '@/lib/razorpayLogo';
+import { calculateCartPricing } from '@/lib/workshopCombos';
 import TeamRosterBuilder from '../components/TeamRosterBuilder';
 
 export default function PaymentGatewayPage() {
@@ -172,13 +173,13 @@ function RazorpayStandardCheckoutPage() {
     };
   }, [profile, user]);
 
-  const totalAmount = useMemo(() => {
-    return displayItems.reduce((acc, item) => {
-      const p = typeof item.unitPrice === 'number' ? item.unitPrice : 0;
-      const q = item.qty || 1;
-      return acc + p * q;
-    }, 0);
-  }, [displayItems]);
+  const pricing = useMemo(
+    () => calculateCartPricing(displayItems),
+    [displayItems]
+  );
+
+  const normalizedDisplayItems = pricing.normalizedItems;
+  const totalAmount = pricing.finalTotal;
 
   /**
    * Official Razorpay Standard Checkout Flow:
@@ -224,7 +225,7 @@ function RazorpayStandardCheckoutPage() {
 
     try {
       // Save checkout snapshot in localStorage so /payment-success has full context
-      saveCheckoutSessionToStorage(displayItems, attendeeDetails, teamState.teams);
+      saveCheckoutSessionToStorage(normalizedDisplayItems, attendeeDetails, teamState.teams);
 
       // Step 1: Load official Razorpay checkout.js script
       const scriptLoaded = await loadRazorpayScript();
@@ -243,7 +244,7 @@ function RazorpayStandardCheckoutPage() {
           amount: totalAmount,
           currency: 'INR',
           receipt: `dhn_${Date.now()}`,
-          items: displayItems,
+          items: normalizedDisplayItems,
           customer: attendeeDetails,
           notes: {
             email: attendeeDetails.email,
@@ -252,7 +253,7 @@ function RazorpayStandardCheckoutPage() {
             college: attendeeDetails.college,
             college_id: attendeeDetails.college_id,
             user_id: attendeeDetails.userId,
-            workshop_ids: displayItems.map((i) => i.id).join(','),
+            workshop_ids: normalizedDisplayItems.map((i) => i.id).join(','),
           },
         }),
       });
@@ -373,8 +374,8 @@ function RazorpayStandardCheckoutPage() {
                 razorpay_signature,
                 email: attendeeDetails.email,
                 user_id: attendeeDetails.userId,
-                workshop_ids: displayItems.map((i) => i.id),
-                items: displayItems,
+                workshop_ids: normalizedDisplayItems.map((i) => i.id),
+                items: normalizedDisplayItems,
                 details: attendeeDetails,
                 amount: totalAmount,
                 teams: teamState.teams || null,
@@ -474,8 +475,8 @@ function RazorpayStandardCheckoutPage() {
                 order_id: orderData.orderId,
                 email: attendeeDetails.email,
                 user_id: attendeeDetails.userId,
-                workshop_ids: displayItems.map((i) => i.id),
-                items: displayItems,
+                workshop_ids: normalizedDisplayItems.map((i) => i.id),
+                items: normalizedDisplayItems,
                 details: attendeeDetails,
                 amount: totalAmount,
                 teams: teamState.teams || null,
@@ -529,6 +530,7 @@ function RazorpayStandardCheckoutPage() {
     clear,
     clearPaymentTimer,
     displayItems,
+    normalizedDisplayItems,
     gatewayStatus.keyId,
     processing,
     router,
@@ -634,9 +636,9 @@ function RazorpayStandardCheckoutPage() {
                 </div>
               </div>
 
-              {/* Cart Items Breakdown */}
+                {/* Cart Items Breakdown */}
               <div className="space-y-2.5 mb-4">
-                {displayItems.map((item, idx) => (
+                {normalizedDisplayItems.map((item, idx) => (
                   <div
                     key={item.id || idx}
                     className="flex items-start justify-between rounded-lg border border-white/5 bg-[#0B0D11] p-3 text-xs"
@@ -659,8 +661,14 @@ function RazorpayStandardCheckoutPage() {
               <div className="border-t border-white/10 pt-3 space-y-1.5 text-xs">
                 <div className="flex justify-between text-white/60">
                   <span>Subtotal</span>
-                  <span className="font-mono">₹{totalAmount}.00</span>
+                  <span className="font-mono">₹{pricing.originalSubtotal}.00</span>
                 </div>
+                {pricing.appliedCombos.map((combo) => (
+                  <div key={combo.id} className="flex justify-between gap-2 text-emerald-400">
+                    <span className="truncate">✓ {combo.name}</span>
+                    <span className="font-mono shrink-0">-₹{combo.savings}.00</span>
+                  </div>
+                ))}
                 <div className="flex justify-between text-white/60">
                   <span>Currency</span>
                   <span className="font-mono text-white/80">

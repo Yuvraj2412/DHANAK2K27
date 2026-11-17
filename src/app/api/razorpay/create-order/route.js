@@ -4,6 +4,7 @@ import {
   createRazorpayOrder,
   PAYMENT_TIMEOUT_SECONDS,
 } from '@/lib/razorpay';
+import { calculateCartPricing } from '@/lib/workshopCombos';
 
 /**
  * GET /api/razorpay/create-order
@@ -70,14 +71,11 @@ export async function POST(req) {
       }
     }
 
-    // Resolve total amount in Rupees
+    // Resolve total amount in Rupees (authoritatively applying workshop prices & combo discounts)
+    const pricing = Array.isArray(items) && items.length > 0 ? calculateCartPricing(items) : null;
     let amountInRupees = Number(amount);
-    if (!Number.isFinite(amountInRupees) && Array.isArray(items) && items.length > 0) {
-      amountInRupees = items.reduce((sum, item) => {
-        const unit = Number(item.unitPrice ?? item.price ?? 0) || 0;
-        const qty = Number(item.qty) || 1;
-        return sum + unit * qty;
-      }, 0);
+    if (pricing && (pricing.hasWorkshops || !Number.isFinite(amountInRupees))) {
+      amountInRupees = pricing.finalTotal;
     }
 
     if (!Number.isFinite(amountInRupees) || amountInRupees < 0) {
@@ -126,6 +124,11 @@ export async function POST(req) {
     const nowMs = Date.now();
     const expiresAtMs = nowMs + PAYMENT_TIMEOUT_SECONDS * 1000;
 
+    const comboSummary =
+      pricing && pricing.appliedCombos.length > 0
+        ? pricing.appliedCombos.map((c) => `${c.name} (-₹${c.savings})`).join(', ')
+        : '';
+
     const mergedNotes = {
       fest: 'Dhanak 2027',
       email: customer.email || notes.email || '',
@@ -135,6 +138,7 @@ export async function POST(req) {
       college_id: customer.college_id || notes.college_id || '',
       user_id: customer.userId || customer.user_id || notes.user_id || '',
       workshop_ids: notes.workshop_ids || itemIds,
+      ...(comboSummary ? { combo_discounts: comboSummary.slice(0, 200) } : {}),
       created_at_ms: String(nowMs),
       expires_at_ms: String(expiresAtMs),
       ...notes,

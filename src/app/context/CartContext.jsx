@@ -3,7 +3,11 @@
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
 import { parsePriceLabel } from '@/lib/parsePriceLabel';
+import { DHANAK_WORKSHOPS } from '@/lib/dhanakWorkshops';
+import { getAuthoritativeWorkshopPrice } from '@/lib/workshopCombos';
 import { useAuth } from './AuthContext';
+
+const WORKSHOP_META_BY_ID = Object.fromEntries(DHANAK_WORKSHOPS.map((w) => [w.id, w]));
 
 const STORAGE_KEY = 'conscientia_cart';
 const FOOD_IDS = ['breakfast', 'lunch', 'dinner'];
@@ -33,7 +37,16 @@ function normalizeItem(item) {
   } else if (FOOD_IDS.includes(next.id) && next.kind !== 'food') {
     next = { ...next, kind: 'food' };
   }
-  if (typeof next.unitPrice !== 'number' && typeof next.priceLabel === 'string') {
+  const officialWorkshopPrice = getAuthoritativeWorkshopPrice(next.id);
+  if (officialWorkshopPrice !== null) {
+    const meta = WORKSHOP_META_BY_ID[next.id];
+    next = {
+      ...next,
+      kind: next.kind || 'workshop',
+      priceLabel: meta?.price || `₹${officialWorkshopPrice}`,
+      unitPrice: officialWorkshopPrice,
+    };
+  } else if (typeof next.unitPrice !== 'number' && typeof next.priceLabel === 'string') {
     const parsed = parsePriceLabel(next.priceLabel);
     if (parsed !== null) next = { ...next, unitPrice: parsed };
   }
