@@ -177,7 +177,7 @@ export default function WorkshopPage() {
                 Add any 2 qualifying workshops to your cart to receive the deducted price automatically.
               </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {WORKSHOP_COMBOS.map((combo) => (
                 <div
                   key={combo.id}

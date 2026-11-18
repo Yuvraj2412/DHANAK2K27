@@ -12,6 +12,9 @@ import useProfile from '../hooks/useProfile';
 import ProfileAvatar from '../components/ProfileAvatar';
 import FetchIntro from '../components/FetchIntro';
 import QrScanner from '../components/QrScanner';
+import ProfileInstructionsModal, {
+  ProfileInstructionsTrigger,
+} from '../components/ProfileInstructionsModal';
 import { getCatalog } from '@/lib/catalogStore';
 import { supabase } from '@/lib/supabaseClient';
 import { FOOD_ADDONS } from '../accommodation/merchData';
@@ -104,6 +107,18 @@ export default function ProfilePage() {
   const [showQr, setShowQr] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [scanResult, setScanResult] = useState(null); // { data } | { error }
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  useEffect(() => {
+    if (editing || showInstructions) {
+      document.body.setAttribute('data-profile-editing', 'true');
+    } else {
+      document.body.removeAttribute('data-profile-editing');
+    }
+    return () => {
+      document.body.removeAttribute('data-profile-editing');
+    };
+  }, [editing, showInstructions]);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -301,7 +316,10 @@ export default function ProfilePage() {
               </button>
               {!editing && (
                 <button
-                  onClick={() => setEditing(true)}
+                  onClick={() => {
+                    setEditing(true);
+                    setShowInstructions(true);
+                  }}
                   className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-amber-300 transition-colors shadow-sm"
                 >
                   Edit
@@ -318,6 +336,8 @@ export default function ProfilePage() {
 
         {editing ? (
           <form onSubmit={handleSave} className="space-y-4 border-t border-white/10 pt-6">
+            <ProfileInstructionsTrigger onClick={() => setShowInstructions(true)} />
+
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Full Name *">
                 <input
@@ -621,6 +641,11 @@ export default function ProfilePage() {
           }}
         />
       )}
+
+      <ProfileInstructionsModal
+        open={showInstructions}
+        onClose={() => setShowInstructions(false)}
+      />
     </ProfileShell>
   );
 }

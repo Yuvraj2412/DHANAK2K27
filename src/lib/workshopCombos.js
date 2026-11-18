@@ -12,15 +12,6 @@ const WORKSHOP_BY_ID = Object.fromEntries(
  */
 export const WORKSHOP_COMBOS = [
   {
-    id: 'space-combo',
-    name: 'Space Combo',
-    description: 'CubeSat Workshop + LIFTOFF Launch Vehicle Workshop',
-    workshopIds: ['cubesat-design', 'launch-vehicle'],
-    originalPrice: 698,
-    comboPrice: 629,
-    savings: 69,
-  },
-  {
     id: 'uav-combo',
     name: 'UAV Combo',
     description: 'Basic UAV + Advanced UAV Workshop',

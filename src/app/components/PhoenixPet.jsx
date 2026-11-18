@@ -566,11 +566,13 @@ export default function PhoenixPet() {
       // Throttle continuous 3D simulation to ~30fps on touch phones to save battery & thermal headroom
       if (isTouch && now - last < 32) return;
 
-      // Hide 3D phoenix pet while splash intro overlay or menu is active (throttled DOM query)
+      // Hide 3D phoenix pet while splash intro, menu, or profile filling is active (throttled DOM query)
       if ((frameCount++ & 7) === 0) {
         isIntroCached =
           Boolean(document.querySelector('[data-fest-intro="true"]')) ||
-          document.body.getAttribute('data-menu-open') === 'true';
+          document.body.getAttribute('data-menu-open') === 'true' ||
+          document.body.getAttribute('data-profile-modal-open') === 'true' ||
+          document.body.getAttribute('data-profile-editing') === 'true';
       }
       if (isIntroCached) {
         if (canvas.style.display !== "none") canvas.style.display = "none";

@@ -22,10 +22,11 @@ const COLUMN_TO_FIELD = {
 
 const IGNORED_COLUMNS = new Set(['kind', 'sort_order', 'updated_at', 'updated_by', 'hidden_fields']);
 
-// Tentative workshops explicitly excluded from the public catalog
+// Cancelled/tentative workshops explicitly excluded from the public catalog
 const EXCLUDED_WORKSHOP_IDS = new Set([
   'aircraft-design-aerodynamics',
   'rocketry-workshop',
+  'launch-vehicle',
 ]);
 
 const TEXT_COLUMNS_DEFAULT_EMPTY = new Set([
