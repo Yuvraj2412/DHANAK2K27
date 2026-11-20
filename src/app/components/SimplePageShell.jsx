@@ -42,16 +42,10 @@ export default function SimplePageShell({
         </div>
 
         <div className="mt-14 flex flex-wrap gap-4">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-[#140B07]/90 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white hover:border-orange-500/60 hover:bg-orange-500/15 transition-colors"
-          >
+          <Link href="/" className="btn-secondary">
             ← Back home
           </Link>
-          <Link
-            href="/workshop"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-black hover:bg-white transition-colors"
-          >
+          <Link href="/workshop" className="btn-primary">
             Workshops
           </Link>
         </div>

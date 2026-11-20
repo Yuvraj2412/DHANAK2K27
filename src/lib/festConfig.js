@@ -52,7 +52,6 @@ export const NAV_LINKS = [
   { label: 'ABOUT',         path: '/about' },
   { label: 'WORKSHOPS',     path: '/workshop' },
   { label: 'EVENTS',        path: '/events' },
-  { label: 'PRONITES',      path: '/pronites' },
   { label: 'MERCH',         path: '/merch' },
   { label: 'ACCOMMODATION', path: '/accommodation' },
   { label: 'SPONSORS',      path: '/sponsors' },

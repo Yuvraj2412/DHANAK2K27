@@ -911,31 +911,32 @@ export default function EventFullDetail({ id: propId }) {
                     disabled={inCart}
                     style={{
                       flex: 1,
-                      padding: "0.85rem",
-                      borderRadius: "12px",
-                      border: "none",
+                      padding: "0.78rem 1.25rem",
+                      borderRadius: "10px",
+                      border: "1px solid rgba(255,255,255,0.22)",
                       background: card.accentColor,
-                      color: "#000",
-                      fontFamily: 'var(--font-display), sans-serif',
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.15em",
+                      color: "#09090B",
+                      fontFamily: 'var(--font-body), sans-serif',
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
                       textTransform: "uppercase",
                       cursor: inCart ? "default" : "pointer",
                       opacity: inCart ? 0.6 : 1,
-                      transition: "all 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
-                      transformStyle: "preserve-3d",
-                      boxShadow: `0 4px 25px ${card.glowColor}, inset 0 1px 0 rgba(255,255,255,0.2)`,
+                      transition: "transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease",
+                      boxShadow: "0 2px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.28)",
                     }}
                     onMouseEnter={(e) => {
                       if (inCart) return;
                       playGlitch();
-                      e.currentTarget.style.transform = "translateZ(30px) scale(1.08)";
-                      e.currentTarget.style.boxShadow = `0 15px 50px ${card.glowColor}, 0 0 70px ${card.glowColor}50, inset 0 1px 0 rgba(255,255,255,0.3)`;
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.filter = "brightness(1.07)";
+                      e.currentTarget.style.boxShadow = `0 8px 22px ${card.glowColor}, inset 0 1px 0 rgba(255,255,255,0.35)`;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateZ(0) scale(1)";
-                      e.currentTarget.style.boxShadow = `0 4px 25px ${card.glowColor}, inset 0 1px 0 rgba(255,255,255,0.2)`;
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.filter = "brightness(1)";
+                      e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.28)";
                     }}
                   >
                     <InterferenceText>{inCart ? "Added to Cart" : "Register Now"}</InterferenceText>
@@ -947,15 +948,15 @@ export default function EventFullDetail({ id: propId }) {
                     style={{
                       flexShrink: 0,
                       width: "3rem",
-                      borderRadius: "12px",
-                      border: `1px solid ${card.accentColor}55`,
+                      borderRadius: "10px",
+                      border: "1px solid rgba(255,255,255,0.18)",
                       background: inCart ? `${card.accentColor}22` : "rgba(255,255,255,0.04)",
                       color: card.accentColor,
                       cursor: inCart ? "default" : "pointer",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      transition: "all 0.3s ease",
+                      transition: "border-color 0.2s ease, background 0.2s ease",
                     }}
                   >
                     {inCart ? <Check size={18} /> : <ShoppingCart size={18} />}

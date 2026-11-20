@@ -260,17 +260,12 @@ function EmberIntro({ onEnter }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.4, duration: 0.6 }}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.96 }}
-        className="relative overflow-hidden rounded-full px-10 py-3.5 font-mono text-xs font-black uppercase tracking-[0.3em] text-black cursor-pointer shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
-        style={{
-          background: "linear-gradient(135deg, #FF4500 0%, #FFB800 100%)",
-          boxShadow: "0 0 32px rgba(255,69,0,0.5), 0 0 60px rgba(255,100,0,0.2)",
-        }}
+        whileHover={{ y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        className="btn-primary relative px-9 py-3.5 text-xs tracking-[0.14em]"
       >
-        {/* Inner shine */}
-        <span className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 60%)" }} />
-        <span className="relative">Enter the Fest ›</span>
+        <span>Enter the Fest</span>
+        <span aria-hidden="true">→</span>
       </motion.button>
 
       {/* IIST credit */}
@@ -437,46 +432,24 @@ function HeroSection() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.6 }}
-        className="flex flex-wrap gap-4 justify-center"
+        className="flex flex-wrap gap-3.5 justify-center"
       >
-        <Link href="/events">
-          <span
-            className="relative inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.25em] text-black cursor-pointer overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg,#FF4500 0%,#FFB800 100%)",
-              boxShadow: "0 8px 32px rgba(255,69,0,0.35)",
-            }}
-          >
-            <span className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 55%)" }} />
-            <span className="relative">Explore Events</span>
-            <span className="relative">›</span>
-          </span>
+        <Link href="/events" className="btn-primary px-6 py-3">
+          <span>Explore Events</span>
+          <span aria-hidden="true">→</span>
         </Link>
-        <Link href="/workshop">
-          <span
-            className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.25em] cursor-pointer"
-            style={{
-              border: "1px solid rgba(255,184,0,0.45)",
-              background: "rgba(255,140,0,0.1)",
-              color: "#FFB800",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            Workshops ›
-          </span>
+        <Link
+          href="/workshop"
+          className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] border border-amber-400/45 bg-[#0C0A09]/80 backdrop-blur-md px-6 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-amber-200 hover:border-amber-300/75 hover:bg-amber-500/15 hover:text-white transition-all duration-200 cursor-pointer"
+        >
+          <span>Workshops</span>
+          <span aria-hidden="true">→</span>
         </Link>
-        <Link href="/about">
-          <span
-            className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.25em] cursor-pointer"
-            style={{
-              border: "1px solid rgba(255,107,0,0.3)",
-              background: "rgba(255,69,0,0.06)",
-              color: "#FF8C00",
-              backdropFilter: "blur(8px)",
-            }}
-          >
-            About Dhanak
-          </span>
+        <Link
+          href="/about"
+          className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] border border-white/20 bg-[#0C0A09]/75 backdrop-blur-md px-6 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-white/90 hover:border-white/40 hover:bg-white/[0.08] hover:text-white transition-all duration-200 cursor-pointer"
+        >
+          <span>About Dhanak</span>
         </Link>
       </motion.div>
 
@@ -630,19 +603,12 @@ function EventsSection() {
                 {/* Bottom Row: Status pill + Tag */}
                 <div className="relative z-10 mt-3.5 flex items-center justify-between gap-3">
                   <span
-                    className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] transition-colors"
-                    style={{
-                      border: `1px solid ${DAY_ACCENTS[i]}40`,
-                      background: `${DAY_ACCENTS[i]}15`,
-                      color: DAY_ACCENTS[i],
-                    }}
+                    className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 group-hover:border-amber-400/60 group-hover:bg-amber-500 group-hover:text-zinc-950 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white backdrop-blur-sm transition-all duration-200"
                   >
-                    <span
-                      style={{ width: 5, height: 5, borderRadius: "50%", background: DAY_ACCENTS[i], boxShadow: `0 0 6px ${DAY_ACCENTS[i]}` }}
-                    />
-                    Register Now ›
+                    <span>Register Now</span>
+                    <span aria-hidden="true">→</span>
                   </span>
-                  <span className="font-mono text-[9px] sm:text-[10px] text-white/50 uppercase tracking-widest">
+                  <span className="font-mono text-[9px] sm:text-[10px] text-white/55 uppercase tracking-widest">
                     Main Event
                   </span>
                 </div>
@@ -696,11 +662,9 @@ function WorkshopsSection() {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href="/workshop">
-          <span className="inline-flex items-center gap-2 rounded-xl bg-[#DC2626] hover:bg-[#EF4444] px-6 py-3 text-xs font-bold text-white transition-colors cursor-pointer shadow-lg">
-            <span>And many more...</span>
-            <span>›</span>
-          </span>
+        <Link href="/workshop" className="btn-secondary">
+          <span>And many more...</span>
+          <span aria-hidden="true">→</span>
         </Link>
       </div>
     </section>
@@ -986,11 +950,9 @@ function SideEventsSection() {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href="/events">
-          <span className="inline-flex items-center gap-2 rounded-xl bg-[#DC2626] hover:bg-[#EF4444] px-6 py-3 text-xs font-bold text-white transition-colors cursor-pointer shadow-lg">
-            <span>And many more...</span>
-            <span>›</span>
-          </span>
+        <Link href="/events" className="btn-secondary">
+          <span>And many more...</span>
+          <span aria-hidden="true">→</span>
         </Link>
       </div>
     </section>
@@ -1077,14 +1039,10 @@ function AboutIISTSection() {
               href="https://iist.ac.in/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 font-mono text-[11px] font-black uppercase tracking-[0.22em] text-black transition-transform hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #FF4500 0%, #FFB800 100%)",
-                boxShadow: "0 6px 28px rgba(255,69,0,0.35)",
-              }}
+              className="btn-primary"
             >
               <span>Visit Official IIST Website (iist.ac.in)</span>
-              <span>↗</span>
+              <span aria-hidden="true">↗</span>
             </a>
           </div>
         </motion.div>

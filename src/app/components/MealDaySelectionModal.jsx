@@ -113,7 +113,7 @@ export default function MealDaySelectionModal({ userId, email, items, onDone }) 
           type="button"
           disabled={!allComplete || saving}
           onClick={submit}
-          className="mt-6 w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black transition-colors hover:bg-white disabled:opacity-40"
+          className="btn-primary mt-6 w-full disabled:opacity-40"
         >
           {saving ? 'Saving…' : 'Confirm Days'}
         </button>

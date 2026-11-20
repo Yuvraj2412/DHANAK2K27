@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMusic } from "../context/MusicContext";
 import useProfile from "../hooks/useProfile";
 import useBodyScrollLock from "../hooks/useBodyScrollLock";
-import { NAV_LINKS, FEST_NAME, FEST_TAGLINE, FEST_INSTITUTE, FEST_INSTITUTE_SHORT, SOCIAL_LINKS } from "@/lib/festConfig";
+import { NAV_LINKS, FEST_NAME, FEST_TAGLINE, FEST_INSTITUTE, SOCIAL_LINKS } from "@/lib/festConfig";
 
 function MusicDisc({
   playing,
@@ -168,7 +168,7 @@ export default function Nav() {
                 className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(255,107,0,0.7)]"
               />
             </div>
-            <div className="flex flex-col leading-none">
+            <div className="hidden sm:flex flex-col leading-none">
               <span
                 className="font-bold tracking-wider brand-text text-[0.95rem] sm:text-[1.4rem] md:text-[1.65rem]"
                 style={{
@@ -196,25 +196,19 @@ export default function Nav() {
             href="/#about-iist"
             onClick={() => setIsMenuOpen(false)}
             title={FEST_INSTITUTE}
-            className="flex items-center gap-1.5 sm:gap-2.5 group min-w-0"
+            className="flex items-center group shrink-0"
           >
-            <div className="relative w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 shrink-0 rounded-full overflow-hidden bg-white border border-white/25 shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-transform duration-300 group-hover:scale-105">
+            <div className="relative w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 shrink-0 rounded-full overflow-hidden bg-white border border-white/25 shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-transform duration-300 group-hover:scale-105">
               <Image
                 src="/assets/iist-header-logo.jpg"
                 alt={`${FEST_INSTITUTE} Logo`}
                 width={36}
                 height={36}
-                sizes="(max-width: 640px) 24px, 36px"
+                sizes="(max-width: 640px) 28px, 36px"
                 priority
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="hidden sm:inline md:hidden font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/90 group-hover:text-amber-300 transition-colors">
-              {FEST_INSTITUTE_SHORT}
-            </span>
-            <span className="hidden md:inline font-mono text-[10px] lg:text-[11px] font-semibold tracking-[0.06em] text-white/90 group-hover:text-amber-300 transition-colors leading-tight max-w-[190px] lg:max-w-none">
-              {FEST_INSTITUTE}
-            </span>
           </Link>
         </div>
 
@@ -281,10 +275,10 @@ export default function Nav() {
             onClick={() => setIsMenuOpen((v) => !v)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
-            className="inline-flex items-center gap-1.5 sm:gap-0 shrink-0 rounded-xl border border-orange-500/45 bg-orange-500/10 px-2.5 h-9 sm:h-auto sm:min-w-[44px] sm:min-h-[44px] sm:border-0 sm:bg-transparent sm:p-0 touch-manipulation [-webkit-tap-highlight-color:transparent] group overflow-hidden cursor-pointer drop-shadow-[0_2px_8px_rgba(0,0,0,1)]"
+            className="inline-flex items-center gap-1.5 sm:gap-0 shrink-0 rounded-lg border border-white/15 bg-white/[0.06] hover:border-amber-400/50 px-2.5 h-9 sm:h-auto sm:min-w-[44px] sm:min-h-[44px] sm:border-0 sm:bg-transparent sm:p-0 touch-manipulation [-webkit-tap-highlight-color:transparent] group overflow-hidden cursor-pointer drop-shadow-[0_2px_8px_rgba(0,0,0,1)] transition-colors"
           >
             <div className="flex flex-col items-end sm:mr-3 overflow-hidden">
-              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.28em] text-amber-200 sm:text-white font-bold group-hover:text-amber-300 transition-colors duration-200">
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.28em] text-white/90 sm:text-white font-semibold group-hover:text-amber-300 transition-colors duration-200">
                 {isMenuOpen ? "CLOSE" : "MENU"}
               </span>
             </div>

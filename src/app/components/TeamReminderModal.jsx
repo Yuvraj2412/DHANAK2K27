@@ -41,14 +41,14 @@ export default function TeamReminderModal({ open, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 rounded-full border border-white/15 px-6 py-2.5 text-center text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:border-orange-500/50 hover:text-amber-300 transition-colors"
+                className="btn-secondary flex-1"
               >
                 Not Now
               </button>
               <Link
                 href="/profile"
                 onClick={onClose}
-                className="flex-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-center text-[10px] font-black uppercase tracking-[0.2em] text-black hover:bg-white transition-colors"
+                className="btn-primary flex-1"
               >
                 Go to Profile
               </Link>

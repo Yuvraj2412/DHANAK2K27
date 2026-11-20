@@ -310,9 +310,9 @@ export default function ProfilePage() {
                   setScanResult(null);
                   setShowScanner(true);
                 }}
-                className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-amber-300 transition-colors shadow-sm"
+                className="btn-secondary !min-h-[38px] !px-4 !py-2 !text-xs"
               >
-                <ScanLine size={13} /> Scan
+                <ScanLine size={14} /> Scan
               </button>
               {!editing && (
                 <button
@@ -320,14 +320,14 @@ export default function ProfilePage() {
                     setEditing(true);
                     setShowInstructions(true);
                   }}
-                  className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-amber-300 transition-colors shadow-sm"
+                  className="btn-secondary !min-h-[38px] !px-4 !py-2 !text-xs"
                 >
                   Edit
                 </button>
               )}
               <button
                 onClick={() => signOut()}
-                className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/80 hover:border-red-400/50 hover:bg-red-500/10 hover:text-red-300 transition-colors shadow-sm"
+                className="inline-flex min-h-[38px] items-center justify-center rounded-[10px] border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-white/80 hover:border-red-400/50 hover:bg-red-500/10 hover:text-red-300 transition-colors cursor-pointer"
               >
                 Sign Out
               </button>
@@ -424,14 +424,14 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-black hover:bg-white transition-colors disabled:opacity-50"
+                className="btn-primary disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save Details'}
               </button>
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="rounded-full border border-white/15 px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors"
+                className="btn-secondary"
               >
                 Cancel
               </button>

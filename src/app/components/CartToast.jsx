@@ -54,7 +54,7 @@ export default function CartToast() {
               <Link
                 href="/cart"
                 onClick={() => setMessage('')}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.15em] text-black transition-colors hover:bg-white"
+                className="btn-primary !min-h-[38px] !px-4 !py-2 shrink-0"
               >
                 <ShoppingCart size={14} />
                 Go to cart

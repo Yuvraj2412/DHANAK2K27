@@ -14,8 +14,7 @@ export const metadata = {
   description: `Official Refund and Cancellation Policy for workshop registrations, event passes, merchandise, and accommodation at ${FEST_NAME} ${FEST_YEAR}, ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL =
-  CONTACT_EMAIL && CONTACT_EMAIL !== 'TBD' ? CONTACT_EMAIL : 'dhanak@iist.ac.in';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
 
 const sections = [
   {

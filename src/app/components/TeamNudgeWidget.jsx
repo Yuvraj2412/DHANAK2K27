@@ -175,7 +175,7 @@ export default function TeamNudgeWidget() {
 
             <Link
               href="/profile"
-              className="block w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-center text-[10px] font-black uppercase tracking-[0.2em] text-black hover:bg-white transition-colors"
+              className="btn-primary w-full !min-h-[38px] !py-2"
             >
               Go to Profile
             </Link>

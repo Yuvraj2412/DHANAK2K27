@@ -411,9 +411,9 @@ export default function WorkshopDetailPage() {
                     rel="noopener noreferrer"
                     download={isLocalBrochure ? true : undefined}
                     onClick={() => playClick()}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/25 to-orange-500/20 hover:from-amber-500/35 hover:to-orange-500/30 border border-amber-400/50 px-4 py-2.5 text-xs sm:text-sm font-bold text-amber-200 hover:text-white transition-all shadow-[0_0_20px_rgba(255,160,0,0.2)]"
+                    className="btn-secondary !px-4 !py-2.5 !text-xs !border-amber-400/45 !bg-amber-500/10 !text-amber-200 hover:!bg-amber-500/20 hover:!border-amber-300/70 hover:!text-white"
                   >
-                    <Download size={16} className="text-amber-400 shrink-0" />
+                    <Download size={15} className="text-amber-400 shrink-0" />
                     <span>Download / View Brochure</span>
                     <ExternalLink size={13} className="text-amber-300/70 shrink-0" />
                   </a>
@@ -763,7 +763,7 @@ export default function WorkshopDetailPage() {
                         type="button"
                         disabled={isClosed}
                         onClick={handleRegisterNow}
-                        className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#FF4500] via-[#FF7A00] to-[#FFB300] hover:brightness-110 disabled:opacity-50 text-black text-sm font-extrabold uppercase tracking-wider transition-all shadow-[0_8px_28px_rgba(255,90,0,0.35)] cursor-pointer"
+                        className="btn-primary w-full disabled:opacity-50"
                       >
                         {isClosed ? "Registrations Closed" : "Register Now ›"}
                       </button>
@@ -772,7 +772,7 @@ export default function WorkshopDetailPage() {
                         type="button"
                         disabled={isClosed || inCart}
                         onClick={handleAddToCart}
-                        className="w-full py-3 px-5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-amber-500/25 text-amber-100 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                        className="btn-secondary w-full disabled:opacity-60"
                       >
                         {inCart ? (
                           <>
@@ -797,7 +797,7 @@ export default function WorkshopDetailPage() {
                       rel="noopener noreferrer"
                       download={isLocalBrochure ? true : undefined}
                       onClick={() => playClick()}
-                      className="w-full py-3 px-5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/40 text-amber-200 hover:text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                      className="btn-secondary w-full !border-amber-400/40 !bg-amber-500/10 !text-amber-200 hover:!bg-amber-500/20 hover:!border-amber-300/70 hover:!text-white"
                     >
                       <Download size={15} className="text-amber-400 shrink-0" />
                       <span>Download Brochure</span>

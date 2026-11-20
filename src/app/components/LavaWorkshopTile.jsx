@@ -70,7 +70,7 @@ export default function LavaWorkshopTile({ workshop, href }) {
 
         {/* Bottom Row: View Button + Caption */}
         <div className="mt-3.5 flex items-center justify-between gap-3">
-          <span className="inline-flex items-center justify-center rounded-lg bg-[#DC2626] group-hover:bg-[#EF4444] px-3.5 py-1.5 text-xs font-bold text-white transition-colors shadow-sm shrink-0">
+          <span className="inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/10 group-hover:border-amber-400/60 group-hover:bg-amber-500 group-hover:text-zinc-950 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-white backdrop-blur-sm transition-all duration-200 shrink-0">
             View
           </span>
           <span className="text-[11px] text-white/70 truncate">

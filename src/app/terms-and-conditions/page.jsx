@@ -14,8 +14,7 @@ export const metadata = {
   description: `Official Terms and Conditions governing registrations, payments, campus entry, and participation at ${FEST_NAME} ${FEST_YEAR}, ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL =
-  CONTACT_EMAIL && CONTACT_EMAIL !== 'TBD' ? CONTACT_EMAIL : 'dhanak@iist.ac.in';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
 
 const sections = [
   {

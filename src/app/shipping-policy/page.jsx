@@ -14,8 +14,7 @@ export const metadata = {
   description: `Official Digital Pass Fulfilment and Merchandise Shipping & Delivery Policy for ${FEST_NAME} ${FEST_YEAR} at ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL =
-  CONTACT_EMAIL && CONTACT_EMAIL !== 'TBD' ? CONTACT_EMAIL : 'dhanak@iist.ac.in';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
 
 const sections = [
   {

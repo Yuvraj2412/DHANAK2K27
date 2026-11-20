@@ -258,7 +258,7 @@ export default function ProfileCompletionModal() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-black shadow-lg shadow-orange-500/25 hover:brightness-110 active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
+                  className="btn-primary w-full disabled:opacity-50"
                 >
                   {saving ? "Saving Details…" : "Save & Continue ›"}
                 </button>
