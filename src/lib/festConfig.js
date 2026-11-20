@@ -32,7 +32,7 @@ export const SOCIAL_LINKS = {
 };
 
 /** Contact */
-export const CONTACT_EMAIL = 'TBD';
+export const CONTACT_EMAIL = 'helpdesk.dhanak2027@gmail.com';
 
 /** Brand colors as JS constants (mirrors the CSS vars) */
 export const BRAND = {

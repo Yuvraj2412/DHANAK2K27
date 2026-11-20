@@ -14,7 +14,7 @@ export const metadata = {
   description: `Official Refund and Cancellation Policy for workshop registrations, event passes, merchandise, and accommodation at ${FEST_NAME} ${FEST_YEAR}, ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'helpdesk.dhanak2027@gmail.com';
 
 const sections = [
   {
@@ -125,8 +125,11 @@ export default function RefundPolicyPage() {
             Finance &amp; Payment Support Escalation
           </p>
           <p className="text-white/80 leading-relaxed">
-            Reach out to our Finance &amp; Technical Coordinators at{' '}
-            <span className="font-mono text-amber-300">{SUPPORT_EMAIL}</span>, Ananya Bhatt (Finance: <span className="font-mono text-amber-300">+91 70382 90052</span>), Sanandhu Santosh (Finance: <span className="font-mono text-amber-300">+91 88482 91588</span>), or Yuvraj Singh Tomar (Web &amp; Gateway Queries: <span className="font-mono text-amber-300">+91 92011 72630</span>).
+            Reach out to our Finance &amp; Organizing Coordinators at{' '}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-mono text-amber-300 underline hover:text-white">
+              {SUPPORT_EMAIL}
+            </a>
+            , Vedhendra Vardhan (Chief Coordinator: <span className="font-mono text-amber-300">+91 83176 58835</span>), Ananya Bhatt (Finance: <span className="font-mono text-amber-300">+91 70382 90052</span>), or Sanandhu Santosh (Finance: <span className="font-mono text-amber-300">+91 88482 91588</span>).
           </p>
           <div className="pt-2 flex flex-wrap gap-3 text-xs">
             <Link

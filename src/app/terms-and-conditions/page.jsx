@@ -10,11 +10,11 @@ import {
 } from '@/lib/festConfig';
 
 export const metadata = {
-  title: `Terms & Conditions | ${FEST_NAME} ${FEST_YEAR} · ${FEST_INSTITUTE_SHORT}`,
-  description: `Official Terms and Conditions governing registrations, payments, campus entry, and participation at ${FEST_NAME} ${FEST_YEAR}, ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
+  title: `Terms of Use & Conditions | ${FEST_NAME} ${FEST_YEAR} · ${FEST_INSTITUTE_SHORT}`,
+  description: `Official Terms of Service, Terms of Use, and Conditions governing website access, Google Sign-In, registrations, payments, campus entry, and participation at ${FEST_NAME} ${FEST_YEAR}, ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'helpdesk.dhanak2027@gmail.com';
 
 const sections = [
   {
@@ -27,12 +27,13 @@ const sections = [
   },
   {
     number: '02',
-    title: 'Eligibility & Attendee Profile Accuracy',
+    title: 'Account Authentication, Eligibility & Profile Accuracy',
     bullets: [
       'Participation in Dhanak workshops, cultural competitions, pronites, and campus accommodation is open to bonafide school, college, polytechnic, and university students as well as eligible individual participants as specified in each event’s rules.',
+      'You may create and access your Dhanak 2027 attendee account using verified email/password credentials or Sign in with Google. You are responsible for maintaining the confidentiality of your account and for all activities conducted under your login.',
       'Upon signing in, you must provide accurate, complete, and verifiable personal information—including your full name, valid mobile number, institution name, college ID number, and 12-digit Aadhaar / Government ID number.',
       'Upon registration, each user is assigned a unique Attendee ID (DHN-ID). This ID is strictly personal and non-transferable.',
-      'Providing forged, false, or misleading identity details may result in immediate cancellation of registration and denial of entry to the IIST Valiamala campus without refund.',
+      `Providing forged, false, or misleading identity details may result in immediate cancellation of registration and denial of entry to the IIST Valiamala campus without refund. You may request account deactivation or deletion at any time by contacting ${SUPPORT_EMAIL}.`,
     ],
   },
   {
@@ -148,9 +149,11 @@ export default function TermsAndConditionsPage() {
             Questions About Our Terms?
           </p>
           <p className="text-white/80 leading-relaxed">
-            For any clarifications regarding eligibility, event rules, or payment terms, reach out to the {FEST_NAME} Organizing Committee at{' '}
-            <span className="font-mono text-amber-300">{SUPPORT_EMAIL}</span> or call{' '}
-            <span className="font-mono text-amber-300">+91 94919 78534</span>.
+            For any clarifications regarding eligibility, event rules, account access, or payment terms, reach out to the {FEST_NAME} Organizing Committee at{' '}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-mono text-amber-300 underline hover:text-white">
+              {SUPPORT_EMAIL}
+            </a>{' '}
+            or call <span className="font-mono text-amber-300">+91 83176 58835 / +91 94919 78534</span>.
           </p>
           <div className="pt-2 flex flex-wrap gap-3 text-xs">
             <Link

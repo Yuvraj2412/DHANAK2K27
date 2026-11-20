@@ -14,7 +14,7 @@ export const metadata = {
   description: `Official Digital Pass Fulfilment and Merchandise Shipping & Delivery Policy for ${FEST_NAME} ${FEST_YEAR} at ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}).`,
 };
 
-const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'helpdesk.dhanak2027@gmail.com';
 
 const sections = [
   {
@@ -116,8 +116,11 @@ export default function ShippingPolicyPage() {
             Merchandise &amp; Pass Delivery Queries
           </p>
           <p className="text-white/80 leading-relaxed">
-            For merchandise shipping or pass fulfilment inquiries, contact Apalla Sai Yashwanth (Sales &amp; Merchandise Head: <span className="font-mono text-amber-300">+91 81069 55426</span>), Yuvraj Singh Tomar (Web &amp; Pass Fulfilment: <span className="font-mono text-amber-300">+91 92011 72630</span>), or email{' '}
-            <span className="font-mono text-amber-300">{SUPPORT_EMAIL}</span>.
+            For merchandise shipping or pass fulfilment inquiries, contact Apalla Sai Yashwanth (Sales &amp; Merchandise Head: <span className="font-mono text-amber-300">+91 81069 55426</span>), Vedhendra Vardhan (Chief Coordinator: <span className="font-mono text-amber-300">+91 83176 58835</span>), or email{' '}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="font-mono text-amber-300 underline hover:text-white">
+              {SUPPORT_EMAIL}
+            </a>
+            .
           </p>
           <p className="text-xs text-white/55">
             Campus Pickup Location: {FEST_INSTITUTE} ({FEST_INSTITUTE_SHORT}), Valiamala P.O., Thiruvananthapuram – 695547, Kerala, India ({FEST_LOCATION}).

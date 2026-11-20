@@ -111,7 +111,7 @@ function ContactCard({ name, role, phone }) {
 }
 
 export default function ContactPage() {
-  const officialEmail = CONTACT_EMAIL || 'TBD';
+  const officialEmail = CONTACT_EMAIL || 'helpdesk.dhanak2027@gmail.com';
   const hasRealEmail = Boolean(officialEmail && officialEmail !== 'TBD' && officialEmail.includes('@'));
 
   return (

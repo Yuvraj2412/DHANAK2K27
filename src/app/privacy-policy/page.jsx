@@ -14,7 +14,7 @@ export const metadata = {
   description: `Official Privacy Policy and Data Protection Guidelines for ${FEST_NAME} ${FEST_YEAR} at ${FEST_INSTITUTE} (${FEST_INSTITUTE_SHORT}), Thiruvananthapuram.`,
 };
 
-const SUPPORT_EMAIL = CONTACT_EMAIL || 'TBD';
+const SUPPORT_EMAIL = CONTACT_EMAIL || 'helpdesk.dhanak2027@gmail.com';
 
 const sections = [
   {
@@ -41,6 +41,19 @@ const sections = [
   },
   {
     number: '03',
+    title: 'Google Sign-In & Google User Data Disclosure',
+    body: [
+      `When you choose to sign up or sign in using Google ("Sign in with Google"), ${FEST_NAME} ${FEST_YEAR} requests access only to basic OpenID Connect identity scopes (openid, email, and profile): your verified Google email address, display name, and profile avatar URL.`,
+      `${FEST_NAME} ${FEST_YEAR}'s use and transfer of information received from Google APIs adheres strictly to the Google API Services User Data Policy (https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.`,
+    ],
+    bullets: [
+      'Purpose of Use: Google user data is used solely to authenticate your identity, create or link your Dhanak 2027 attendee account, assign your unique DHN-ID, and pre-fill your name and email address.',
+      'No Unauthorized Sharing or Advertising: We do NOT sell, rent, or transfer Google user data to third-party data brokers, advertisers, or unrelated platforms, nor do we use Google user data for targeted advertising or AI/ML model training.',
+      'Access Revocation: You may revoke this website’s access to your Google account at any time from your Google Account Permissions page (https://myaccount.google.com/permissions).',
+    ],
+  },
+  {
+    number: '04',
     title: 'Payment Processing & Financial Data Security (Razorpay)',
     body: [
       'All online payments on this website are processed securely through Razorpay Software Private Limited ("Razorpay"), an RBI-authorized Payment Aggregator compliant with the Payment Card Industry Data Security Standard (PCI-DSS Level 1).',
@@ -49,7 +62,7 @@ const sections = [
     ],
   },
   {
-    number: '04',
+    number: '05',
     title: 'How We Use Your Information',
     bullets: [
       'Processing and confirming your registrations for workshops, cultural competitions, pronites, foodfest orders, merchandise, and campus accommodation.',
@@ -61,7 +74,7 @@ const sections = [
     ],
   },
   {
-    number: '05',
+    number: '06',
     title: 'Data Storage, Cryptographic Safeguards & Row-Level Security',
     body: [
       'We implement strict technical and organizational security controls to protect your personal data against unauthorized access, alteration, disclosure, or destruction:',
@@ -73,14 +86,14 @@ const sections = [
     ],
   },
   {
-    number: '06',
+    number: '07',
     title: 'Cookies & Local Storage',
     body: [
       'We use essential first-party browser cookies and localStorage items solely to maintain your authenticated login session, preserve your shopping cart items across page reloads, and recover checkout state in the event of a temporary network interruption during payment redirect. We do not use third-party advertising trackers or sell behavioral data to marketers.',
     ],
   },
   {
-    number: '07',
+    number: '08',
     title: 'Information Sharing & Third-Party Disclosure',
     body: [
       'We never sell, rent, or trade your personal information. Your data is shared only under the following limited circumstances:',
@@ -92,17 +105,18 @@ const sections = [
     ],
   },
   {
-    number: '08',
-    title: 'Data Retention & Your Rights',
+    number: '09',
+    title: 'Data Retention, Account Deletion & Your Rights',
     body: [
-      'Registration and certificate verification records are retained for the duration of the festival cycle and subsequent academic verification period so participants can validate their official certificates online. You have the right to view and update your profile details prior to checkout, request correction of inaccurate information, or contact our team regarding data privacy concerns.',
+      'Registration and certificate verification records are retained only for the duration of the festival cycle and subsequent academic verification period so participants can validate their official certificates online.',
+      `You have the right to view and update your profile details, request correction of inaccurate information, revoke Google Sign-In access via your Google Account settings, or request deletion of your account and personal data (including Google user data) at any time by emailing ${SUPPORT_EMAIL} from your registered email address. Verified deletion requests are processed within 7 business days, subject to mandatory financial audit or campus security record-keeping obligations under Indian law.`,
     ],
   },
   {
-    number: '09',
+    number: '10',
     title: 'Grievance Officer & Contact Information',
     body: [
-      'In accordance with the Information Technology Act, 2000 and rules made thereunder, if you have any questions, concerns, or grievances regarding this Privacy Policy or the handling of your personal data, please contact:',
+      'In accordance with the Information Technology Act, 2000 and rules made thereunder, if you have any questions, concerns, data deletion requests, or grievances regarding this Privacy Policy or the handling of your personal data, please contact:',
     ],
   },
 ];
@@ -175,8 +189,13 @@ export default function PrivacyPolicyPage() {
             Valiamala P.O., Thiruvananthapuram – 695547, Kerala, India ({FEST_LOCATION})
           </p>
           <div className="pt-2 flex flex-wrap gap-x-6 gap-y-2 text-xs sm:text-sm font-mono text-amber-300">
-            <span>Email: {SUPPORT_EMAIL}</span>
-            <span>Phone: +91 94919 78534 / +91 92011 72630</span>
+            <span>
+              Email:{' '}
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="underline hover:text-white">
+                {SUPPORT_EMAIL}
+              </a>
+            </span>
+            <span>Phone: +91 83176 58835 / +91 94919 78534</span>
           </div>
           <div className="pt-3 flex flex-wrap gap-3 text-xs">
             <Link
