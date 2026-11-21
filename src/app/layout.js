@@ -196,10 +196,71 @@ const cinzelDecorative = Cinzel_Decorative({
 
 
 export const metadata = {
+  metadataBase: new URL('https://dhanakiist.org'),
 
-  title: "Dhanak 2027 - Ember from Ashes | IIST",
+  title: {
+    default: 'Dhanak 2027 - Ember from Ashes | IIST Thiruvananthapuram',
+    template: '%s | Dhanak 2027 · IIST',
+  },
 
-  description: "Dhanak 2027 - The Annual Cultural Festival of IIST Thiruvananthapuram.",
+  description:
+    'Official website of Dhanak 2027 (Ember from Ashes) — the Annual Cultural Festival of the Indian Institute of Space Science and Technology (IIST), Valiamala, Thiruvananthapuram. Explore online workshops, cultural events, competitions, and registrations.',
+
+  keywords: [
+    'Dhanak 2027',
+    'DHANAK 2027',
+    'Dhanak IIST',
+    'Dhanak 2027 IIST',
+    'IIST Cultural Fest',
+    'Ember from Ashes',
+    'Indian Institute of Space Science and Technology',
+    'IIST Thiruvananthapuram',
+    'Dhanak Workshops',
+    'Dhanak Events',
+    'dhanakiist.org',
+  ],
+
+  alternates: {
+    canonical: '/',
+  },
+
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: 'https://dhanakiist.org',
+    siteName: 'Dhanak 2027 · IIST',
+    title: 'Dhanak 2027 — Ember from Ashes | Annual Cultural Festival of IIST',
+    description:
+      'Official website of Dhanak 2027 at Indian Institute of Space Science and Technology (IIST), Thiruvananthapuram. Register for workshops, competitions, and campus events.',
+    images: [
+      {
+        url: '/assets/dhanak-logo.png',
+        width: 512,
+        height: 512,
+        alt: 'Dhanak 2027 — Ember from Ashes Official Emblem',
+      },
+    ],
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dhanak 2027 — Ember from Ashes | IIST',
+    description:
+      'Annual Cultural Festival of the Indian Institute of Space Science and Technology (IIST), Thiruvananthapuram.',
+    images: ['/assets/dhanak-logo.png'],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  },
 
   icons: {
     icon: [
@@ -210,8 +271,47 @@ export const metadata = {
     shortcut: '/assets/dhanak-logo.png?v=2027',
     apple: '/apple-icon.png?v=2027',
   },
+};
 
-}
+const STRUCTURED_DATA = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'Dhanak 2027',
+      alternateName: ['DHANAK 2027', 'Dhanak IIST', 'Dhanak — Ember from Ashes'],
+      url: 'https://dhanakiist.org',
+    },
+    {
+      '@type': 'Event',
+      name: 'Dhanak 2027 — Ember from Ashes',
+      description:
+        'The Annual Cultural Festival of the Indian Institute of Space Science and Technology (IIST), Valiamala, Thiruvananthapuram featuring workshops, competitions, and performances.',
+      url: 'https://dhanakiist.org',
+      image: 'https://dhanakiist.org/assets/dhanak-logo.png',
+      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      location: {
+        '@type': 'Place',
+        name: 'Indian Institute of Space Science and Technology (IIST)',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Valiamala P.O.',
+          addressLocality: 'Thiruvananthapuram',
+          addressRegion: 'Kerala',
+          postalCode: '695547',
+          addressCountry: 'IN',
+        },
+      },
+      organizer: {
+        '@type': 'Organization',
+        name: 'Dhanak Organizing Committee, IIST',
+        url: 'https://dhanakiist.org',
+        email: 'helpdesk.dhanak2027@gmail.com',
+      },
+    },
+  ],
+};
 
 
 
@@ -266,6 +366,10 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico?v=2027" sizes="any" />
         <link rel="shortcut icon" href="/assets/dhanak-logo.png?v=2027" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png?v=2027" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+        />
       </head>
 
       <body className="min-h-dvh text-white antialiased">
