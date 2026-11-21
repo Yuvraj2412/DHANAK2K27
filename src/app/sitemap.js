@@ -1,7 +1,7 @@
 import { DHANAK_WORKSHOPS } from '@/lib/dhanakWorkshops';
 import { DHANAK_EVENTS } from '@/lib/dhanakEvents';
 
-const SITE_URL = 'https://dhanakiist.org';
+const SITE_URL = 'https://www.dhanakiist.org';
 
 export default function sitemap() {
   const now = new Date();

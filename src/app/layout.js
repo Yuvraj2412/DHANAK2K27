@@ -68,15 +68,9 @@ const spaceGrotesk = Space_Grotesk({
 
 
 const orbitron = Orbitron({
-
-  weight: ["400", "500", "600", "700", "800", "900"],
-
   subsets: ["latin"],
-
   variable: "--font-display",
-
   display: "swap",
-
 });
 
 
@@ -168,15 +162,9 @@ const rubikMonoOne = Rubik_Mono_One({
 
 
 const cinzel = Cinzel({
-
-  weight: ["600", "700", "800"],
-
   subsets: ["latin"],
-
   variable: "--font-cinzel",
-
   display: "swap",
-
 });
 
 
@@ -196,7 +184,7 @@ const cinzelDecorative = Cinzel_Decorative({
 
 
 export const metadata = {
-  metadataBase: new URL('https://dhanakiist.org'),
+  metadataBase: new URL('https://www.dhanakiist.org'),
 
   title: {
     default: 'Dhanak 2027 - Ember from Ashes | IIST Thiruvananthapuram',
@@ -227,7 +215,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://dhanakiist.org',
+    url: 'https://www.dhanakiist.org',
     siteName: 'Dhanak 2027 · IIST',
     title: 'Dhanak 2027 — Ember from Ashes | Annual Cultural Festival of IIST',
     description:
@@ -280,15 +268,15 @@ const STRUCTURED_DATA = {
       '@type': 'WebSite',
       name: 'Dhanak 2027',
       alternateName: ['DHANAK 2027', 'Dhanak IIST', 'Dhanak — Ember from Ashes'],
-      url: 'https://dhanakiist.org',
+      url: 'https://www.dhanakiist.org',
     },
     {
       '@type': 'Event',
       name: 'Dhanak 2027 — Ember from Ashes',
       description:
         'The Annual Cultural Festival of the Indian Institute of Space Science and Technology (IIST), Valiamala, Thiruvananthapuram featuring workshops, competitions, and performances.',
-      url: 'https://dhanakiist.org',
-      image: 'https://dhanakiist.org/assets/dhanak-logo.png',
+      url: 'https://www.dhanakiist.org',
+      image: 'https://www.dhanakiist.org/assets/dhanak-logo.png',
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
       location: {
@@ -306,7 +294,7 @@ const STRUCTURED_DATA = {
       organizer: {
         '@type': 'Organization',
         name: 'Dhanak Organizing Committee, IIST',
-        url: 'https://dhanakiist.org',
+        url: 'https://www.dhanakiist.org',
         email: 'helpdesk.dhanak2027@gmail.com',
       },
     },

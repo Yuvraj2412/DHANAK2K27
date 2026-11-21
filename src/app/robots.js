@@ -1,4 +1,4 @@
-const SITE_URL = 'https://dhanakiist.org';
+const SITE_URL = 'https://www.dhanakiist.org';
 
 export default function robots() {
   return {
